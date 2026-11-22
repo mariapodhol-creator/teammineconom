@@ -1,0 +1,1259 @@
+<!doctype html>
+<html lang="uk">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<meta name="theme-color" content="#06112a">
+<title>TEAM QUEST</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700;800&family=Unbounded:wght@500;700;800&display=swap&subset=cyrillic">
+<style>
+/* Layout: темна сцена з білими картками-«аркушами»; один жовтий акцент на діях; великий заголовок як головний жест. */
+:root {
+  --navy-950: #06112a;
+  --navy-900: #0b1d44;
+  --navy-800: #12306a;
+  --blue: #2f8cff;
+  --sky: #6cc4ff;
+  --sky-soft: #bfe6ff;
+  --white: #ffffff;
+  --yellow: #ffd23f;
+  --yellow-deep: #ffb700;
+  --ink: #0b1d44;
+  --ink-soft: #4a5b82;
+  --line: rgba(255, 255, 255, .16);
+  --glass: rgba(255, 255, 255, .07);
+  --good: #19b86b;
+  --good-bg: #e3f8ee;
+  --bad: #e5484d;
+  --bad-bg: #fde8e8;
+  --font-display: "Unbounded", "Manrope", system-ui, sans-serif;
+  --font-body: "Manrope", system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
+  color-scheme: dark;
+}
+* { box-sizing: border-box; }
+[hidden] { display: none !important; }
+html { -webkit-text-size-adjust: 100%; }
+body {
+  margin: 0;
+  background: var(--navy-950);
+  color: var(--white);
+  font: 500 16px/1.55 var(--font-body);
+  padding-block: 14px 56px;
+  padding-left: max(16px, env(safe-area-inset-left, 0px));
+  padding-right: max(16px, env(safe-area-inset-right, 0px));
+  min-height: 100vh;
+  overflow-x: hidden;
+}
+h1, h2, h3, p { margin: 0; }
+h1, h2, h3 { text-wrap: balance; }
+button, input, textarea { font: inherit; color: inherit; }
+:focus-visible { outline: 3px solid var(--yellow); outline-offset: 3px; border-radius: 6px; }
+
+/* фон */
+.bg { position: fixed; inset: 0; z-index: -1; overflow: hidden;
+  background: radial-gradient(1200px 700px at 85% -10%, #17408f 0%, transparent 60%),
+              radial-gradient(900px 600px at -10% 40%, #0f2f6e 0%, transparent 60%), var(--navy-950); }
+.bg::after { content: ""; position: absolute; inset: 0;
+  background-image: radial-gradient(rgba(255,255,255,.09) 1px, transparent 1.4px); background-size: 26px 26px;
+  mask-image: linear-gradient(180deg, #000 0%, transparent 70%); -webkit-mask-image: linear-gradient(180deg, #000 0%, transparent 70%); }
+.bg i { position: absolute; border-radius: 50%; filter: blur(60px); opacity: .5; animation: drift 18s ease-in-out infinite alternate; }
+.bg i:nth-child(1) { width: 340px; height: 340px; background: #1c63d6; top: 6%; left: -80px; }
+.bg i:nth-child(2) { width: 280px; height: 280px; background: #6cc4ff; opacity: .22; top: 55%; right: -60px; animation-delay: -6s; }
+.bg i:nth-child(3) { width: 220px; height: 220px; background: #ffd23f; opacity: .12; bottom: -40px; left: 30%; animation-delay: -11s; }
+@keyframes drift { to { transform: translate3d(40px, -30px, 0) scale(1.15); } }
+#fx { position: fixed; inset: 0; width: 100%; height: 100%; pointer-events: none; z-index: 60; }
+
+.app { max-width: 1120px; margin: 0 auto; }
+
+/* верхня панель */
+.top { display: flex; align-items: center; justify-content: space-between; gap: 12px; padding-block: 6px 18px; }
+.logo { display: flex; align-items: center; gap: 10px; background: none; border: 0; padding: 4px; cursor: pointer; font-family: var(--font-display); font-weight: 800; font-size: .82rem; letter-spacing: .08em; }
+.logo-mark { width: 34px; height: 34px; border-radius: 11px; background: var(--yellow); color: var(--navy-900); display: grid; place-items: center; }
+.top-r { display: flex; align-items: center; gap: 12px; }
+.dots { display: flex; align-items: center; gap: 6px; font-size: .78rem; font-weight: 700; color: var(--sky-soft); }
+.dots b { width: 10px; height: 10px; border-radius: 50%; background: rgba(255,255,255,.2); transition: background .3s, transform .3s; }
+.dots b.on { background: var(--yellow); transform: scale(1.15); }
+.dots span { margin-left: 4px; }
+
+/* кнопки */
+.btn { display: inline-flex; align-items: center; justify-content: center; gap: 8px; min-height: 48px; padding: 0 22px; border-radius: 999px; border: 2px solid transparent;
+  font-weight: 800; font-size: .98rem; cursor: pointer; transition: transform .15s, background .2s, box-shadow .2s, border-color .2s; text-decoration: none; }
+.btn:active { transform: scale(.97); }
+.btn.primary { background: var(--yellow); color: var(--navy-900); box-shadow: 0 8px 22px -8px rgba(255, 210, 63, .7); }
+.btn.primary:hover { background: #ffdc66; transform: translateY(-2px); }
+.btn.ghost { background: rgba(255,255,255,.08); border-color: var(--line); color: var(--white); }
+.btn.ghost:hover { background: rgba(255,255,255,.16); }
+.btn.line { background: transparent; border-color: var(--navy-900); color: var(--navy-900); }
+.btn.line:hover { background: rgba(11,29,68,.07); }
+.btn.sm { min-height: 40px; padding: 0 16px; font-size: .88rem; }
+.btn[disabled] { opacity: .45; cursor: not-allowed; transform: none; }
+.ic { flex: none; }
+
+/* головна */
+.hero { padding-block: clamp(10px, 4vw, 44px) 34px; display: grid; gap: 22px; }
+.eyebrow { font-weight: 700; letter-spacing: .14em; text-transform: uppercase; font-size: .78rem; color: var(--sky); }
+.brand { font-family: var(--font-display); font-weight: 800; font-size: clamp(2.5rem, 10.4vw, 6.2rem); line-height: .98; letter-spacing: -.02em; }
+.brand span { color: var(--yellow); display: inline-block; }
+.slogan { font-family: var(--font-display); font-weight: 500; font-size: clamp(1rem, 2.8vw, 1.5rem); color: var(--sky-soft); line-height: 1.35; }
+.intro { display: grid; gap: 12px; max-width: 62ch; color: #dbe7ff; font-size: clamp(1rem, 2.2vw, 1.12rem); }
+.intro p:nth-child(2) { font-weight: 800; color: var(--white); }
+.games { display: grid; grid-template-columns: repeat(auto-fit, minmax(min(100%, 280px), 1fr)); gap: 18px; margin-top: 6px; }
+.gcard { position: relative; background: var(--white); color: var(--ink); border-radius: 28px; padding: 14px 14px 22px; display: flex; flex-direction: column; gap: 12px; cursor: pointer;
+  transition: transform .25s cubic-bezier(.2,.8,.2,1), box-shadow .25s; box-shadow: 0 24px 50px -24px rgba(0,0,0,.6); }
+.gcard:hover { transform: translateY(-6px) rotate(-.4deg); box-shadow: 0 34px 60px -24px rgba(0,0,0,.7); }
+.gill { border-radius: 20px; aspect-ratio: 16 / 9; display: grid; place-items: center; overflow: hidden; }
+.gill svg { width: 82%; height: auto; max-height: 92%; transition: transform .4s; }
+.gcard:hover .gill svg { transform: scale(1.06) rotate(-1.5deg); }
+.g1 .gill { background: linear-gradient(135deg, #2f8cff, #12306a); }
+.g2 .gill { background: linear-gradient(135deg, #12306a, #0b1d44); }
+.g3 .gill { background: linear-gradient(135deg, #6cc4ff, #2f8cff); }
+.gnum { font-weight: 800; font-size: .74rem; letter-spacing: .14em; text-transform: uppercase; color: var(--blue); padding-inline: 8px; }
+.gcard h2 { font-family: var(--font-display); font-weight: 700; font-size: 1.12rem; line-height: 1.25; padding-inline: 8px; }
+.gcard p { color: var(--ink-soft); padding-inline: 8px; flex: 1; }
+.gcard .btn { margin-inline: 8px; align-self: flex-start; }
+.gdone { position: absolute; top: 24px; right: 24px; display: none; align-items: center; gap: 6px; background: var(--good); color: #fff; font-weight: 800; font-size: .78rem; padding: 6px 12px 6px 8px; border-radius: 999px; }
+.gcard.done .gdone { display: inline-flex; }
+
+.finalcta { margin-top: 26px; display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: 14px; padding: 18px 22px; border-radius: 22px; background: var(--glass); border: 1px solid var(--line); }
+.finalcta p { color: #dbe7ff; font-weight: 600; max-width: 52ch; }
+.finalcta.open { background: linear-gradient(120deg, rgba(255,210,63,.18), rgba(108,196,255,.14)); border-color: rgba(255,210,63,.5); }
+
+/* сторінки ігор */
+.shell { max-width: 760px; margin: 0 auto; display: grid; gap: 18px; }
+.shell.wide { max-width: 1040px; }
+.gh { display: grid; gap: 10px; }
+.back { justify-self: start; }
+.gh h1 { font-family: var(--font-display); font-weight: 800; font-size: clamp(1.6rem, 5.4vw, 2.5rem); line-height: 1.1; }
+.gh p { color: #cfe0ff; max-width: 60ch; }
+.bar { height: 8px; border-radius: 99px; background: rgba(255,255,255,.14); overflow: hidden; }
+.bar i { display: block; height: 100%; width: 0; border-radius: inherit; background: linear-gradient(90deg, var(--sky), var(--yellow)); transition: width .5s cubic-bezier(.2,.8,.2,1); }
+.sheet { background: var(--white); color: var(--ink); border-radius: 30px; padding: clamp(20px, 4.6vw, 38px); box-shadow: 0 30px 60px -28px rgba(0,0,0,.7); display: grid; gap: 18px; }
+.sheet.enter { animation: cardIn .5s cubic-bezier(.2,.8,.2,1); }
+@keyframes cardIn { from { opacity: 0; transform: translateY(22px) rotate(-1.2deg) scale(.97); } to { opacity: 1; transform: none; } }
+.chip { display: inline-flex; align-items: center; gap: 6px; font-size: .78rem; font-weight: 800; letter-spacing: .06em; text-transform: uppercase; padding: 6px 12px; border-radius: 999px; background: #e8f2ff; color: var(--navy-800); }
+.chip.y { background: #fff3c4; color: #6b4a00; }
+.chip.g { background: var(--good-bg); color: #0b6b3e; }
+.chiprow { display: flex; flex-wrap: wrap; gap: 8px; align-items: center; justify-content: space-between; }
+.q { font-family: var(--font-display); font-weight: 700; font-size: clamp(1.2rem, 3.8vw, 1.7rem); line-height: 1.28; text-wrap: balance; }
+textarea, input[type=text] { width: 100%; border: 2px solid #d3def5; background: #f6f9ff; color: var(--ink); border-radius: 16px; padding: 14px 16px; resize: vertical; transition: border-color .2s, box-shadow .2s; }
+textarea { min-height: 130px; }
+textarea:focus, input[type=text]:focus { outline: 0; border-color: var(--blue); box-shadow: 0 0 0 4px rgba(47,140,255,.2); }
+::placeholder { color: #8a99bd; }
+.actions { display: flex; flex-wrap: wrap; gap: 10px; }
+.actions .grow { flex: 1 1 200px; }
+.under { display: flex; justify-content: center; }
+
+/* результат */
+.result { text-align: center; justify-items: center; }
+.badge { width: 92px; height: 92px; border-radius: 28px; background: var(--yellow); color: var(--navy-900); display: grid; place-items: center; animation: pop .7s cubic-bezier(.2,1.4,.3,1); }
+@keyframes pop { from { transform: scale(.3) rotate(-25deg); opacity: 0; } to { transform: none; opacity: 1; } }
+.result h2 { font-family: var(--font-display); font-weight: 800; font-size: clamp(1.4rem, 5vw, 2.1rem); line-height: 1.15; }
+.result p { color: var(--ink-soft); max-width: 46ch; }
+.answers { width: 100%; text-align: left; display: grid; gap: 10px; max-height: 340px; overflow: auto; padding: 4px; }
+.ans { background: #f1f6ff; border-radius: 16px; padding: 12px 14px; }
+.ans b { display: block; font-size: .8rem; color: var(--blue); margin-bottom: 2px; }
+.ans span { overflow-wrap: anywhere; white-space: pre-wrap; }
+.bignum { font-family: var(--font-display); font-weight: 800; font-size: clamp(2.4rem, 10vw, 3.6rem); color: var(--navy-900); line-height: 1; }
+.bignum small { font-size: .45em; color: var(--ink-soft); font-weight: 700; }
+
+/* вікторина */
+.opts { display: grid; gap: 10px; }
+.opt { display: flex; gap: 14px; align-items: flex-start; text-align: left; width: 100%; padding: 14px 16px; border-radius: 18px; border: 2px solid #d3def5; background: #f6f9ff; color: var(--ink); font-weight: 600; cursor: pointer;
+  transition: border-color .2s, background .2s, transform .15s; }
+.opt:hover:not([disabled]) { border-color: var(--blue); background: #eaf3ff; transform: translateX(3px); }
+.opt .l { flex: none; width: 30px; height: 30px; border-radius: 10px; background: var(--navy-900); color: #fff; display: grid; place-items: center; font-weight: 800; font-size: .86rem; }
+.opt .t { padding-top: 3px; min-width: 0; overflow-wrap: anywhere; }
+.opt[disabled] { cursor: default; }
+.opt.ok { border-color: var(--good); background: var(--good-bg); }
+.opt.ok .l { background: var(--good); }
+.opt.no { border-color: var(--bad); background: var(--bad-bg); animation: shake .4s; }
+.opt.no .l { background: var(--bad); }
+.opt.dim { opacity: .55; }
+@keyframes shake { 25% { transform: translateX(-6px); } 75% { transform: translateX(6px); } }
+.fb { border-radius: 18px; padding: 16px 18px; display: grid; gap: 10px; animation: cardIn .35s ease; }
+.fb.ok { background: var(--good-bg); color: #0b4d2d; }
+.fb.no { background: var(--bad-bg); color: #7a1d20; }
+.fb strong { font-family: var(--font-display); font-size: 1rem; }
+.stat { display: flex; gap: 8px; align-items: center; flex-wrap: wrap; }
+.lvl { height: 10px; width: 100%; border-radius: 99px; background: #e3ebfa; overflow: hidden; }
+.lvl i { display: block; height: 100%; background: linear-gradient(90deg, var(--blue), var(--yellow)); border-radius: inherit; transition: width 1s cubic-bezier(.2,.8,.2,1); width: 0; }
+
+/* стіна вдячності */
+.wform { display: grid; grid-template-columns: minmax(0, 1.1fr) minmax(0, .9fr); gap: 22px; align-items: start; }
+.fcol { display: grid; gap: 18px; min-width: 0; }
+.fl { font-weight: 800; font-size: .9rem; color: var(--navy-800); margin-bottom: 8px; display: block; }
+.cats { display: grid; grid-template-columns: repeat(auto-fill, minmax(min(100%, 190px), 1fr)); gap: 8px; }
+.cat { display: flex; align-items: center; gap: 10px; padding: 10px 12px; border-radius: 14px; border: 2px solid #d3def5; background: #f6f9ff; font-weight: 700; font-size: .9rem; color: var(--ink); cursor: pointer; text-align: left; transition: all .2s; }
+.cat:hover { border-color: var(--blue); }
+.cat[aria-pressed=true] { background: var(--navy-900); border-color: var(--navy-900); color: #fff; }
+.cat[aria-pressed=true] .ic { color: var(--yellow); }
+.exs { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 10px; }
+.ex { border: 1.5px dashed #aebfe4; background: #fff; color: var(--navy-800); border-radius: 999px; padding: 6px 12px; font-size: .82rem; font-weight: 600; cursor: pointer; text-align: left; transition: all .2s; }
+.ex:hover { border-color: var(--blue); background: #eaf3ff; }
+.dsg { display: flex; gap: 10px; flex-wrap: wrap; }
+.dsw { width: 52px; height: 52px; border-radius: 16px; border: 3px solid transparent; cursor: pointer; padding: 0; position: relative; transition: transform .2s; }
+.dsw:hover { transform: translateY(-2px); }
+.dsw[aria-pressed=true] { border-color: var(--navy-900); box-shadow: 0 0 0 3px #fff inset; }
+.dsw.d1 { background: linear-gradient(135deg, #2f8cff, #0b1d44); }
+.dsw.d2 { background: linear-gradient(135deg, #ffd23f, #ffb100); }
+.dsw.d3 { background: linear-gradient(135deg, #bfe6ff, #6cc4ff); }
+.dsw.d4 { background: linear-gradient(135deg, #12306a, #06112a); }
+.err { color: var(--bad); font-weight: 700; font-size: .88rem; min-height: 1.2em; }
+.pvcol { display: grid; gap: 10px; position: sticky; top: 12px; min-width: 0; }
+.pvlabel { font-weight: 800; font-size: .78rem; letter-spacing: .12em; text-transform: uppercase; color: var(--ink-soft); }
+
+/* листівка */
+.pc { --c1: #2f8cff; --c2: #0b1d44; --fg: #fff; --ac: #ffd23f; position: relative; overflow: hidden; border-radius: 24px; padding: 20px 20px 16px; min-height: 230px;
+  background: linear-gradient(135deg, var(--c1), var(--c2)); color: var(--fg); display: flex; flex-direction: column; gap: 10px; box-shadow: 0 18px 34px -18px rgba(6,17,42,.7); }
+.pc::before { content: ""; position: absolute; right: -40px; top: -40px; width: 150px; height: 150px; border-radius: 50%; background: var(--ac); opacity: .2; }
+.pc::after { content: ""; position: absolute; left: -30px; bottom: -50px; width: 120px; height: 120px; border-radius: 50%; background: var(--fg); opacity: .1; }
+.pc.d2 { --c1: #ffd23f; --c2: #ffb100; --fg: #0b1d44; --ac: #0b1d44; }
+.pc.d3 { --c1: #d4eeff; --c2: #6cc4ff; --fg: #0b1d44; --ac: #0b1d44; }
+.pc.d4 { --c1: #12306a; --c2: #06112a; --fg: #fff; --ac: #6cc4ff; }
+.pc > * { position: relative; z-index: 1; min-width: 0; }
+.pc-cat { display: inline-flex; align-items: center; gap: 6px; align-self: flex-start; font-weight: 800; font-size: .76rem; letter-spacing: .05em; text-transform: uppercase; padding: 5px 11px; border-radius: 999px; background: rgba(255,255,255,.2); }
+.pc.d2 .pc-cat, .pc.d3 .pc-cat { background: rgba(11,29,68,.12); }
+.pc-to { font-family: var(--font-display); font-weight: 700; font-size: 1rem; overflow-wrap: anywhere; }
+.pc-msg { font-weight: 700; font-size: 1.08rem; line-height: 1.4; flex: 1; overflow-wrap: anywhere; }
+.pc-foot { display: flex; justify-content: space-between; align-items: center; font-family: var(--font-display); font-weight: 800; font-size: .7rem; letter-spacing: .12em; opacity: .9; }
+.pc-foot svg { color: var(--ac); }
+.pc.d1 .pc-foot svg, .pc.d4 .pc-foot svg { color: var(--ac); }
+
+.wall-h { display: flex; flex-wrap: wrap; align-items: end; justify-content: space-between; gap: 10px; margin-top: 8px; }
+.wall-h h2 { font-family: var(--font-display); font-weight: 800; font-size: clamp(1.3rem, 4.4vw, 1.9rem); }
+.wall { display: grid; grid-template-columns: repeat(auto-fill, minmax(min(100%, 260px), 1fr)); gap: 20px; padding-block: 8px; }
+.wi { display: grid; gap: 8px; animation: cardIn .6s cubic-bezier(.2,.8,.2,1) both; }
+.wi:nth-child(odd) .pc { transform: rotate(-1.2deg); }
+.wi:nth-child(even) .pc { transform: rotate(1deg); }
+.wi .pc { transition: transform .25s; }
+.wi .pc:hover { transform: rotate(0) translateY(-4px); }
+.wi-f { display: flex; justify-content: space-between; align-items: center; gap: 8px; color: #b9cdf5; font-size: .8rem; font-weight: 600; padding-inline: 4px; }
+.mini { background: none; border: 1.5px solid var(--line); color: var(--white); border-radius: 999px; padding: 6px 12px; font-weight: 700; font-size: .78rem; cursor: pointer; display: inline-flex; gap: 6px; align-items: center; }
+.mini:hover { background: rgba(255,255,255,.12); }
+
+/* модальні вікна */
+.modal { position: fixed; inset: 0; z-index: 50; display: grid; place-items: center; overflow: auto; background: rgba(4, 12, 32, .82); backdrop-filter: blur(6px);
+  padding: max(16px, env(safe-area-inset-top, 0px)) max(16px, env(safe-area-inset-right, 0px)) max(16px, env(safe-area-inset-bottom, 0px)) max(16px, env(safe-area-inset-left, 0px)); }
+.mbox { width: min(100%, 440px); display: grid; gap: 16px; justify-items: center; position: relative; }
+.mbox h2 { font-family: var(--font-display); font-weight: 800; font-size: 1.4rem; text-align: center; }
+.mbox .pc { width: 100%; min-height: 280px; animation: fly .9s cubic-bezier(.2,1.1,.3,1); }
+.mbox .pc-msg { font-size: 1.2rem; }
+@keyframes fly { 0% { opacity: 0; transform: translateY(120px) rotate(-14deg) scale(.7); } 60% { opacity: 1; transform: translateY(-8px) rotate(2deg) scale(1.02); } 100% { transform: none; } }
+.mact { display: flex; flex-wrap: wrap; gap: 10px; justify-content: center; }
+.fl-h { position: absolute; bottom: 10%; color: var(--yellow); pointer-events: none; animation: rise 3.4s ease-out forwards; opacity: 0; }
+@keyframes rise { 0% { transform: translateY(0) scale(.6); opacity: 0; } 15% { opacity: 1; } 100% { transform: translateY(-420px) scale(1.2) rotate(18deg); opacity: 0; } }
+.imgbox { background: #fff; color: var(--ink); border-radius: 24px; padding: 16px; width: min(100%, 420px); display: grid; gap: 12px; text-align: center; }
+.imgbox img { width: 100%; height: auto; border-radius: 16px; display: block; -webkit-touch-callout: default; user-select: auto; }
+.imgbox p { color: var(--ink-soft); font-size: .92rem; }
+
+/* фінал */
+.fin { max-width: 820px; margin: 0 auto; text-align: center; display: grid; gap: 22px; justify-items: center; padding-block: clamp(10px, 5vw, 50px); }
+.fin-t { display: grid; gap: 14px; color: #dbe7ff; font-size: clamp(1rem, 2.4vw, 1.2rem); max-width: 56ch; }
+.fin-t p:nth-child(3) { font-family: var(--font-display); font-weight: 700; color: var(--yellow); }
+.fin-t p:last-child { font-weight: 800; color: #fff; }
+.fin-b { font-family: var(--font-display); font-weight: 800; font-size: clamp(2.6rem, 12vw, 6.4rem); line-height: 1; letter-spacing: -.02em; display: flex; flex-wrap: wrap; justify-content: center; gap: 0 .28em; }
+.fin-b .w { display: inline-flex; }
+.fin-b .w:last-child { color: var(--yellow); }
+.fin-b span.c { display: inline-block; animation: letter .8s cubic-bezier(.2,1.3,.3,1) both; }
+@keyframes letter { from { opacity: 0; transform: translateY(60px) rotate(12deg) scale(.6); } to { opacity: 1; transform: none; } }
+.fin .slogan { animation: cardIn 1s .9s both; }
+.fin-star { color: var(--yellow); animation: spin 12s linear infinite; }
+@keyframes spin { to { transform: rotate(360deg); } }
+
+.toast { position: fixed; left: 50%; bottom: max(24px, env(safe-area-inset-bottom, 0px)); transform: translate(-50%, 30px); background: var(--white); color: var(--navy-900); font-weight: 800; padding: 12px 20px; border-radius: 999px;
+  box-shadow: 0 14px 40px -10px rgba(0,0,0,.6); opacity: 0; pointer-events: none; transition: all .3s; z-index: 70; max-width: calc(100% - 32px); text-align: center; }
+.toast.on { opacity: 1; transform: translate(-50%, 0); }
+.foot { margin-top: 40px; text-align: center; color: #8fa6d6; font-size: .82rem; }
+
+.note { font-size: .86rem; color: #b9cdf5; max-width: 62ch; }
+.adm-stats { display: flex; flex-wrap: wrap; gap: 10px; }
+.stat-b { background: var(--glass); border: 1px solid var(--line); border-radius: 18px; padding: 12px 18px; min-width: 140px; }
+.stat-b b { display: block; font-family: var(--font-display); font-size: 1.7rem; line-height: 1.2; }
+.stat-b span { font-size: .82rem; color: #b9cdf5; }
+.plist { display: grid; gap: 10px; }
+details.pp { background: var(--white); color: var(--ink); border-radius: 18px; padding: 2px 16px 4px; }
+details.pp summary { cursor: pointer; padding: 12px 0; font-weight: 800; display: flex; flex-wrap: wrap; gap: 8px; align-items: center; list-style: none; }
+details.pp summary::-webkit-details-marker { display: none; }
+details.pp .ans { margin-bottom: 10px; }
+details.pp .body { display: grid; gap: 8px; padding-bottom: 8px; }
+.mini.del { border-color: rgba(255, 130, 130, .5); }
+@media (max-width: 760px) {
+  .wform { grid-template-columns: 1fr; }
+  .pvcol { position: static; }
+  .actions .btn { flex: 1 1 100%; }
+  .actions .grow { flex-basis: 100%; }
+  .top { padding-bottom: 10px; }
+  .hero { gap: 16px; }
+  .dots span { display: none; }
+}
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after { animation-duration: .01ms !important; animation-iteration-count: 1 !important; transition-duration: .01ms !important; }
+}
+</style>
+</head>
+<body>
+
+
+<div class="bg" aria-hidden="true"><i></i><i></i><i></i></div>
+<canvas id="fx" aria-hidden="true"></canvas>
+
+<div class="app">
+  <header class="top">
+    <button class="logo" id="logo" aria-label="TEAM QUEST — на головну">
+      <span class="logo-mark"><span data-ic="star" data-s="20"></span></span>
+      <span>TEAM QUEST</span>
+    </button>
+    <div class="top-r">
+      <div class="dots" id="dots" role="img" aria-label="Пройдено ігор"><b></b><b></b><b></b><span id="dots-t">0 / 3</span></div>
+      <button class="btn ghost sm" id="adminBtn" hidden data-go="admin"><span data-ic="shield" data-s="18"></span>Адмін</button>
+      <button class="btn ghost sm" id="homeBtn" hidden><span data-ic="home" data-s="18"></span>Головна</button>
+    </div>
+  </header>
+
+  <main>
+    <!-- ГОЛОВНА -->
+    <section id="v-home" class="view">
+      <div class="hero">
+        <p class="eyebrow">Міністерство економіки та довкілля України</p>
+        <h1 class="brand">TEAM <span>QUEST</span></h1>
+        <p class="slogan">«Різні люди. Спільна справа. Одна команда.»</p>
+        <div class="intro">
+          <p>Ми щодня працюємо над спільними завданнями, зустрічаємося на нарадах, вирішуємо складні питання та реалізуємо важливі проєкти.</p>
+          <p>Але чи добре ми знаємо одне одного?</p>
+          <p>Пропонуємо познайомитися ближче, дізнатися більше про Міністерство та не забути сказати дякую тим, хто поруч.</p>
+        </div>
+      </div>
+
+      <div class="games">
+        <article class="gcard g1" id="card-g1" data-go="g1">
+          <span class="gdone"><span data-ic="check" data-s="16"></span>Пройдено</span>
+          <div class="gill">
+            <svg viewBox="0 0 220 130" aria-hidden="true">
+              <circle cx="66" cy="50" r="19" fill="#ffd23f"/><path d="M30 114c0-22 16-36 36-36s36 14 36 36z" fill="#ffd23f"/>
+              <circle cx="154" cy="50" r="19" fill="#6cc4ff"/><path d="M118 114c0-22 16-36 36-36s36 14 36 36z" fill="#6cc4ff"/>
+              <circle cx="110" cy="58" r="23" fill="#fff"/><path d="M68 124c0-26 19-42 42-42s42 16 42 42z" fill="#fff"/>
+              <rect x="150" y="6" width="60" height="30" rx="15" fill="#fff"/><path d="M164 35l-5 11 15-11z" fill="#fff"/>
+              <circle cx="168" cy="21" r="3.2" fill="#0b1d44"/><circle cx="180" cy="21" r="3.2" fill="#0b1d44"/><circle cx="192" cy="21" r="3.2" fill="#0b1d44"/>
+            </svg>
+          </div>
+          <span class="gnum">Гра 1 · про людей</span>
+          <h2>ПОЗНАЙОМИМОСЯ?</h2>
+          <p>Картки з веселими запитаннями, які допоможуть побачити колег не лише як працівників, а й як особистостей.</p>
+          <button class="btn primary" data-go="g1">Грати<span data-ic="arrow-right" data-s="18"></span></button>
+        </article>
+
+        <article class="gcard g2" id="card-g2" data-go="g2">
+          <span class="gdone"><span data-ic="check" data-s="16"></span>Пройдено</span>
+          <div class="gill">
+            <svg viewBox="0 0 220 130" aria-hidden="true">
+              <polygon points="110,14 30,52 190,52" fill="#fff"/>
+              <rect x="34" y="52" width="152" height="7" rx="2" fill="#fff"/>
+              <rect x="42" y="64" width="14" height="42" rx="3" fill="#6cc4ff"/><rect x="70" y="64" width="14" height="42" rx="3" fill="#6cc4ff"/>
+              <rect x="98" y="64" width="14" height="42" rx="3" fill="#6cc4ff"/><rect x="126" y="64" width="14" height="42" rx="3" fill="#6cc4ff"/>
+              <rect x="154" y="64" width="14" height="42" rx="3" fill="#6cc4ff"/>
+              <rect x="28" y="108" width="164" height="10" rx="3" fill="#fff"/>
+              <circle cx="110" cy="36" r="8" fill="#ffd23f"/>
+              <path d="M178 34c0-16 10-26 28-26 0 18-9 28-28 26z" fill="#ffd23f"/>
+            </svg>
+          </div>
+          <span class="gnum">Гра 2 · про Міністерство</span>
+          <h2>МІНІСТЕРСТВО ЗСЕРЕДИНИ</h2>
+          <p>Вікторина на 16 запитань про напрями роботи, взаємодію підрозділів і роль державного службовця.</p>
+          <button class="btn primary" data-go="g2">Грати<span data-ic="arrow-right" data-s="18"></span></button>
+        </article>
+
+        <article class="gcard g3" id="card-g3" data-go="g3">
+          <span class="gdone"><span data-ic="check" data-s="16"></span>Пройдено</span>
+          <div class="gill">
+            <svg viewBox="0 0 220 130" aria-hidden="true">
+              <path d="M110 116C60 84 44 60 44 42a26 26 0 0 1 66-10 26 26 0 0 1 66 10c0 18-16 42-66 74z" fill="#ffd23f"/>
+              <path d="M32 22l3 8 8 3-8 3-3 8-3-8-8-3 8-3z" fill="#fff"/>
+              <path d="M192 14l3 8 8 3-8 3-3 8-3-8-8-3 8-3z" fill="#fff"/>
+              <path d="M188 88l2.4 6 6 2.4-6 2.4-2.4 6-2.4-6-6-2.4 6-2.4z" fill="#fff"/>
+              <path d="M30 92l2.4 6 6 2.4-6 2.4-2.4 6-2.4-6-6-2.4 6-2.4z" fill="#0b1d44" opacity=".5"/>
+              <path d="M96 52l10 10 20-22" fill="none" stroke="#0b1d44" stroke-width="9" stroke-linecap="round" stroke-linejoin="round"/>
+            </svg>
+          </div>
+          <span class="gnum">Гра 3 · про вдячність</span>
+          <h2>СКАЖЕМО ДЯКУЮ!</h2>
+          <p>Створи листівку подяки для колеги й додай її на спільну стіну вдячності. Найтепліша частина застосунку.</p>
+          <button class="btn primary" data-go="g3">Грати<span data-ic="arrow-right" data-s="18"></span></button>
+        </article>
+      </div>
+
+      <div class="finalcta" id="finalcta">
+        <p id="finalcta-t">Пройди всі три ігри — і відкриється фінальний екран.</p>
+        <button class="btn primary" id="finalBtn" disabled><span data-ic="sparkles" data-s="18"></span>Перейти до фіналу</button>
+      </div>
+      <div class="finalcta" id="sendbox">
+        <p>Хочете передати свої відповіді та подяки адміністратору гри? Скопіюйте код результатів і надішліть його в месенджері або на пошту.</p>
+        <button class="btn ghost" data-send><span data-ic="send" data-s="18"></span>Надіслати результати</button>
+      </div>
+      <p class="foot"><button class="mini" data-go="admin" type="button">Для адміністратора</button></p>
+      <p class="foot share-note">Відповіді та подяки зберігаються лише на цьому пристрої.</p>
+    </section>
+
+    <!-- ГРА 1 -->
+    <section id="v-g1" class="view" hidden>
+      <div class="shell">
+        <div class="gh">
+          <button class="btn ghost sm back" data-go="home"><span data-ic="arrow-left" data-s="18"></span>На головну</button>
+          <h1>ПОЗНАЙОМИМОСЯ?</h1>
+          <p>Відповідай чесно й тепло. Запитання з'являються у випадковому порядку, а ти можеш пропустити будь-яке.</p>
+          <div class="bar" aria-hidden="true"><i id="g1-bar"></i></div>
+          <p class="note share-note"></p>
+        </div>
+
+        <div class="sheet" id="g1-q">
+          <div class="chiprow">
+            <span class="chip" id="g1-count">Запитання 1 з 10</span>
+            <span class="chip g" id="g1-saved" hidden><span data-ic="check" data-s="14"></span>Збережено</span>
+          </div>
+          <h2 class="q" id="g1-qt"></h2>
+          <label for="g1-text" class="fl" style="margin:0;position:absolute;left:-9999px">Твоя відповідь</label>
+          <textarea id="g1-text" placeholder="Напиши свою відповідь тут…" maxlength="500"></textarea>
+          <div class="actions">
+            <button class="btn line" id="g1-save"><span data-ic="save" data-s="18"></span>Зберегти відповідь</button>
+            <button class="btn line" id="g1-skip"><span data-ic="skip" data-s="16"></span>Пропустити</button>
+            <button class="btn primary grow" id="g1-next">Наступне запитання<span data-ic="arrow-right" data-s="18"></span></button>
+          </div>
+        </div>
+        <div class="under" id="g1-rand-w"><button class="btn ghost" id="g1-rand"><span data-ic="dice" data-s="20"></span>Випадкове запитання</button></div>
+
+        <div class="sheet result" id="g1-res" hidden>
+          <div class="badge"><span data-ic="smile" data-s="48"></span></div>
+          <h2>Тепер ми знаємо про тебе трохи більше!</h2>
+          <p id="g1-res-t"></p>
+          <div class="answers" id="g1-ans"></div>
+          <div class="actions" style="justify-content:center">
+            <button class="btn primary" data-go="home"><span data-ic="home" data-s="18"></span>На головну</button>
+            <button class="btn line" data-send><span data-ic="send" data-s="18"></span>Надіслати результати</button>
+            <button class="btn line" id="g1-again"><span data-ic="refresh" data-s="18"></span>Пройти ще раз</button>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ГРА 2 -->
+    <section id="v-g2" class="view" hidden>
+      <div class="shell">
+        <div class="gh">
+          <button class="btn ghost sm back" data-go="home"><span data-ic="arrow-left" data-s="18"></span>На головну</button>
+          <h1>МІНІСТЕРСТВО ЗСЕРЕДИНИ</h1>
+          <p>Оберіть одну правильну відповідь із чотирьох. Кожна правильна відповідь — 10 балів, серія з трьох поспіль дає бонус.</p>
+          <div class="bar" aria-hidden="true"><i id="g2-bar"></i></div>
+        </div>
+
+        <div class="sheet" id="g2-q">
+          <div class="chiprow">
+            <span class="chip" id="g2-count">Запитання 1 з 16</span>
+            <span class="stat"><span class="chip y" id="g2-streak" hidden></span><span class="chip y"><span data-ic="star" data-s="14"></span><span id="g2-pts">0</span> балів</span></span>
+          </div>
+          <h2 class="q" id="g2-qt"></h2>
+          <div class="opts" id="g2-opts"></div>
+          <div class="fb" id="g2-fb" hidden>
+            <strong id="g2-fb-h"></strong>
+            <p id="g2-fb-t"></p>
+            <span class="chip" id="g2-tag" style="justify-self:start"></span>
+            <div class="actions"><button class="btn primary" id="g2-next">Далі<span data-ic="arrow-right" data-s="18"></span></button></div>
+          </div>
+        </div>
+
+        <div class="sheet result" id="g2-res" hidden>
+          <div class="badge"><span data-ic="award" data-s="48"></span></div>
+          <h2 id="g2-res-h"></h2>
+          <div class="bignum"><span id="g2-res-n">0</span><small> з 16</small></div>
+          <div class="lvl"><i id="g2-res-bar"></i></div>
+          <p id="g2-res-pts"></p>
+          <p id="g2-res-t"></p>
+          <div class="actions" style="justify-content:center">
+            <button class="btn primary" data-go="home"><span data-ic="home" data-s="18"></span>На головну</button>
+            <button class="btn line" id="g2-again"><span data-ic="refresh" data-s="18"></span>Грати ще раз</button>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ГРА 3 -->
+    <section id="v-g3" class="view" hidden>
+      <div class="shell wide">
+        <div class="gh">
+          <button class="btn ghost sm back" data-go="home"><span data-ic="arrow-left" data-s="18"></span>На головну</button>
+          <h1>СКАЖЕМО ДЯКУЮ!</h1>
+          <p>Оберіть категорію, напишіть ім'я або псевдонім колеги, додайте теплі слова й виберіть дизайн листівки.</p>
+          <p class="note share-note"></p>
+        </div>
+
+        <form class="sheet wform" id="g3-form" novalidate>
+          <div class="fcol">
+            <div>
+              <span class="fl" id="cat-l">1. Категорія подяки</span>
+              <div class="cats" id="cats" role="group" aria-labelledby="cat-l"></div>
+            </div>
+            <div>
+              <label class="fl" for="w-name">2. Ім'я або псевдонім колеги</label>
+              <input type="text" id="w-name" maxlength="40" placeholder="Наприклад: Колега з відділу аналітики" autocomplete="off">
+            </div>
+            <div>
+              <label class="fl" for="w-msg">3. Ваше повідомлення</label>
+              <textarea id="w-msg" maxlength="220" placeholder="Напишіть кілька теплих слів…" style="min-height:110px"></textarea>
+              <div class="exs" id="exs" aria-label="Приклади повідомлень"></div>
+            </div>
+            <div>
+              <span class="fl" id="dsg-l">4. Дизайн листівки</span>
+              <div class="dsg" id="dsg" role="group" aria-labelledby="dsg-l"></div>
+            </div>
+          </div>
+          <div class="pvcol">
+            <span class="pvlabel">Так виглядатиме листівка</span>
+            <div id="g3-pv"></div>
+            <p class="err" id="g3-err" role="alert"></p>
+            <button type="submit" class="btn primary"><span data-ic="send" data-s="18"></span>Надіслати подяку</button>
+          </div>
+        </form>
+
+        <div class="wall-h">
+          <h2>Стіна вдячності</h2>
+          <span class="chip y" id="wall-n"></span>
+        </div>
+        <div class="wall" id="wall"></div>
+      </div>
+    </section>
+
+    <!-- АДМІНІСТРАТОР -->
+    <section id="v-admin" class="view" hidden>
+      <div class="shell wide">
+        <div class="gh">
+          <button class="btn ghost sm back" data-go="home"><span data-ic="arrow-left" data-s="18"></span>На головну</button>
+          <h1>Панель адміністратора</h1>
+          <p>Колеги надсилають вам код результатів. Вставте їх нижче, і тут з'явиться зведення. Воно зберігається лише в цьому браузері.</p>
+        </div>
+        <div class="sheet" style="gap:12px">
+          <label class="fl" for="imp-text" style="margin:0">Додати результати учасників</label>
+          <textarea id="imp-text" style="min-height:90px;font-size:.85rem" placeholder="Вставте сюди коди, які надіслали колеги (можна кілька підряд)…"></textarea>
+          <div class="actions"><button class="btn primary" id="imp-btn" type="button">Додати до зведення</button><button class="btn line" id="imp-clear" type="button">Очистити зведення</button></div>
+          <p class="note" id="imp-msg" style="color:var(--ink-soft)" role="status"></p>
+        </div>
+        <div class="adm-stats" id="adm-stats"></div>
+        <div class="actions">
+          <button class="btn primary" id="ex-ans"><span data-ic="download" data-s="18"></span>Відповіді (CSV)</button>
+          <button class="btn ghost" id="ex-cards"><span data-ic="download" data-s="18"></span>Подяки (CSV)</button>
+          <button class="btn ghost" id="ex-all"><span data-ic="download" data-s="18"></span>Усе (JSON)</button>
+        </div>
+        <p class="note" id="adm-msg">CSV відкривається в Excel і Google Таблицях (роздільник — крапка з комою, кодування UTF-8).</p>
+        <div class="plist" id="adm-list"></div>
+      </div>
+    </section>
+
+    <!-- ФІНАЛ -->
+    <section id="v-final" class="view" hidden>
+      <div class="fin">
+        <span class="fin-star"><span data-ic="star" data-s="44"></span></span>
+        <div class="fin-t">
+          <p>Ми дізналися трохи більше одне про одного, відкрили для себе нові факти про Міністерство та знайшли привід сказати дякую.</p>
+          <p>Ми різні. У нас різні завдання, досвід, погляди та професійні історії.</p>
+          <p>Але нас об'єднує спільна справа.</p>
+          <p>Дякуємо, що ти частина нашої команди!</p>
+        </div>
+        <h2 class="fin-b" id="fin-b" aria-label="TEAM QUEST"></h2>
+        <p class="slogan">«Різні люди. Спільна справа. Одна команда.»</p>
+        <div class="actions" style="justify-content:center">
+          <button class="btn primary" data-go="home"><span data-ic="home" data-s="18"></span>На головну</button>
+          <button class="btn ghost" id="restart"><span data-ic="refresh" data-s="18"></span>Пройти все спочатку</button>
+          <button class="btn primary" data-send><span data-ic="send" data-s="18"></span>Надіслати результати</button>
+          <button class="btn ghost" id="fin-boom"><span data-ic="sparkles" data-s="18"></span>Ще салют!</button>
+        </div>
+      </div>
+    </section>
+  </main>
+</div>
+
+<!-- модальне вікно листівки -->
+<div class="modal" id="m-card" role="dialog" aria-modal="true" aria-labelledby="m-card-h" hidden>
+  <div class="mbox" id="m-card-box">
+    <h2 id="m-card-h">Подяку надіслано!</h2>
+    <div id="m-card-pc" style="width:100%"></div>
+    <div class="mact">
+      <button class="btn primary" id="m-save"><span data-ic="image" data-s="18"></span>Зберегти як зображення</button>
+      <button class="btn ghost" id="m-final" hidden><span data-ic="sparkles" data-s="18"></span>До фіналу</button>
+      <button class="btn ghost" id="m-close">До стіни вдячності</button>
+    </div>
+  </div>
+</div>
+<!-- модальне вікно зображення -->
+<div class="modal" id="m-img" role="dialog" aria-modal="true" aria-labelledby="m-img-h" hidden style="z-index:55">
+  <div class="imgbox">
+    <h2 id="m-img-h" style="color:var(--navy-900);font-size:1.1rem">Листівка готова</h2>
+    <img id="m-img-i" alt="Листівка подяки у вигляді зображення">
+    <p>На телефоні натисніть на зображення й утримуйте, на комп'ютері — клацніть правою кнопкою миші та оберіть «Зберегти зображення».</p>
+    <div class="mact">
+      <button class="btn primary sm" id="m-img-dl"><span data-ic="save" data-s="16"></span>Спробувати завантажити</button>
+      <button class="btn line sm" id="m-img-x">Закрити</button>
+    </div>
+  </div>
+</div>
+<!-- модальне вікно з текстом -->
+<div class="modal" id="m-txt" role="dialog" aria-modal="true" aria-labelledby="m-txt-h" hidden style="z-index:56">
+  <div class="imgbox" style="width:min(100%,520px)">
+    <h2 id="m-txt-h" style="color:var(--navy-900);font-size:1.1rem;font-family:var(--font-display)"></h2>
+    <p id="m-txt-p"></p>
+    <textarea id="m-txt-t" readonly style="min-height:150px;font-size:.78rem"></textarea>
+    <div class="mact"><button class="btn primary sm" id="m-txt-copy" type="button">Скопіювати</button><button class="btn line sm" id="m-txt-x" type="button">Закрити</button></div>
+  </div>
+</div>
+<div class="toast" id="toast" role="status" aria-live="polite"></div>
+
+<script>
+(function () {
+  'use strict';
+  var $ = function (s, r) { return (r || document).querySelector(s); };
+  var $$ = function (s, r) { return Array.prototype.slice.call((r || document).querySelectorAll(s)); };
+  var reduce = window.matchMedia && matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+  /* ---------- іконки ---------- */
+  var P = {
+    heart: '<path d="M12 21s-7-4.5-9.5-9A5.5 5.5 0 0 1 12 6a5.5 5.5 0 0 1 9.5 6c-2.5 4.5-9.5 9-9.5 9z"/>',
+    award: '<circle cx="12" cy="9" r="6"/><path d="M8.5 14 7 22l5-3 5 3-1.5-8"/>',
+    users: '<circle cx="9" cy="8" r="3.5"/><path d="M2.5 20c0-3.6 2.9-6 6.5-6s6.5 2.4 6.5 6"/><circle cx="17.5" cy="9" r="2.8"/><path d="M17 14.2c2.8.3 4.5 2.2 4.5 5.3"/>',
+    lifebuoy: '<circle cx="12" cy="12" r="9"/><circle cx="12" cy="12" r="3.5"/><path d="M5.6 5.6l3.9 3.9M14.5 14.5l3.9 3.9M18.4 5.6l-3.9 3.9M9.5 14.5l-3.9 3.9"/>',
+    sun: '<circle cx="12" cy="12" r="4"/><path d="M12 2v2.5M12 19.5V22M2 12h2.5M19.5 12H22M4.9 4.9l1.8 1.8M17.3 17.3l1.8 1.8M4.9 19.1l1.8-1.8M17.3 6.7l1.8-1.8"/>',
+    link: '<path d="M10 14a4 4 0 0 0 5.7 0l3-3a4 4 0 0 0-5.7-5.7l-1 1"/><path d="M14 10a4 4 0 0 0-5.7 0l-3 3a4 4 0 0 0 5.7 5.7l1-1"/>',
+    dice: '<rect x="3" y="3" width="18" height="18" rx="4"/><circle cx="8.5" cy="8.5" r="1.2"/><circle cx="15.5" cy="15.5" r="1.2"/><circle cx="12" cy="12" r="1.2"/><circle cx="15.5" cy="8.5" r="1.2"/><circle cx="8.5" cy="15.5" r="1.2"/>',
+    'arrow-right': '<path d="M5 12h14M13 6l6 6-6 6"/>',
+    'arrow-left': '<path d="M19 12H5M11 6l-6 6 6 6"/>',
+    home: '<path d="M3 11l9-8 9 8"/><path d="M5 10v10h14V10"/>',
+    check: '<path d="M5 12.5l4.5 4.5L19 7"/>',
+    skip: '<path d="M5 5l10 7-10 7z"/><path d="M19 5v14"/>',
+    save: '<path d="M5 4h11l3 3v13H5z"/><path d="M8 4v5h7V4M8 20v-6h8v6"/>',
+    image: '<rect x="3" y="4" width="18" height="16" rx="3"/><circle cx="9" cy="10" r="1.8"/><path d="M21 16l-5-5-8 9"/>',
+    star: '<path d="M12 2.5l2.8 6.1 6.7.7-5 4.5 1.5 6.7L12 17l-6 3.5 1.5-6.7-5-4.5 6.7-.7z"/>',
+    flame: '<path d="M12 3c1 4 5 5.5 5 10a5 5 0 0 1-10 0c0-2 1-3.2 2-4.2.2 1.2.8 2 1.5 2.2C10 7.5 10.5 5 12 3z"/>',
+    send: '<path d="M21 3L10 14M21 3l-7 18-4-7-7-4z"/>',
+    refresh: '<path d="M20 11a8 8 0 1 0-2 6"/><path d="M20 4v7h-7"/>',
+    sparkles: '<path d="M12 3l2 6 6 2-6 2-2 6-2-6-6-2 6-2z"/>',
+    shield: '<path d="M12 3l8 3v6c0 4.5-3.2 8-8 9-4.8-1-8-4.5-8-9V6z"/>',
+    download: '<path d="M12 4v11M7 11l5 5 5-5M5 20h14"/>',
+    trash: '<path d="M4 7h16M9 7V4h6v3M6 7l1 13h10l1-13"/>',
+    smile: '<circle cx="12" cy="12" r="9"/><path d="M8 14c1 1.6 2.4 2.4 4 2.4s3-.8 4-2.4"/><path d="M9 9.5h.01M15 9.5h.01"/>'
+  };
+  function icon(n, s) {
+    s = s || 20;
+    return '<svg class="ic" viewBox="0 0 24 24" width="' + s + '" height="' + s + '" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">' + (P[n] || '') + '</svg>';
+  }
+  $$('[data-ic]').forEach(function (el) { el.innerHTML = icon(el.dataset.ic, +el.dataset.s || 20); el.style.display = 'inline-flex'; });
+  function h(tag, cls, text) { var e = document.createElement(tag); if (cls) e.className = cls; if (text != null) e.textContent = text; return e; }
+  function shuffle(a) { a = a.slice(); for (var i = a.length - 1; i > 0; i--) { var j = Math.floor(Math.random() * (i + 1)); var t = a[i]; a[i] = a[j]; a[j] = t; } return a; }
+  function plural(n, one, few, many) { var m = n % 10, c = n % 100; if (m === 1 && c !== 11) return one; if (m >= 2 && m <= 4 && (c < 12 || c > 14)) return few; return many; }
+
+  /* ---------- збереження ---------- */
+  var KEY = 'teamquest.v1';
+  function defaults() { return { g1: { answers: {}, done: false }, g2: { best: null, done: false }, g3: { cards: [], done: false, seeded: false }, seenFinal: false }; }
+  var S = defaults();
+  try {
+    var raw = localStorage.getItem(KEY);
+    if (raw) { var o = JSON.parse(raw); var d = defaults(); S = { g1: Object.assign(d.g1, o.g1), g2: Object.assign(d.g2, o.g2), g3: Object.assign(d.g3, o.g3), seenFinal: !!o.seenFinal, pid: o.pid || null }; }
+  } catch (e) { S = defaults(); }
+  function save() { try { localStorage.setItem(KEY, JSON.stringify(S)); } catch (e) {} }
+
+  var DEMO = [
+    { id: 'demo1', cat: 'help', to: 'Колезі з сусіднього відділу', msg: 'Дякую, що завжди знаходиш час допомогти.', design: 'd1', demo: true },
+    { id: 'demo2', cat: 'team', to: 'Нашій проєктній команді', msg: 'З вами навіть складні завдання стають простішими.', design: 'd2', demo: true },
+    { id: 'demo3', cat: 'joy', to: 'Колезі з позитивною енергією', msg: 'Дякую за позитив, який ти приносиш у команду.', design: 'd3', demo: true }
+  ];
+  S.g3.cards = (S.g3.cards || []).filter(function (c) { return !c.demo; });
+
+  /* ---------- тости й ефекти ---------- */
+  var toastT;
+  function toast(t) { var e = $('#toast'); e.textContent = t; e.classList.add('on'); clearTimeout(toastT); toastT = setTimeout(function () { e.classList.remove('on'); }, 2200); }
+
+  var cv = $('#fx'), cx = cv.getContext('2d'), parts = [], raf = 0, dpr = Math.min(window.devicePixelRatio || 1, 2);
+  function fit() { cv.width = innerWidth * dpr; cv.height = innerHeight * dpr; }
+  fit(); addEventListener('resize', fit);
+  var COL = ['#ffd23f', '#6cc4ff', '#ffffff', '#2f8cff', '#ffe58a'];
+  function burst(x, y, n, power) {
+    if (reduce) return;
+    for (var i = 0; i < n; i++) {
+      var a = Math.random() * Math.PI * 2, v = (Math.random() * .6 + .4) * (power || 9);
+      parts.push({ x: x, y: y, vx: Math.cos(a) * v, vy: Math.sin(a) * v - 4, s: Math.random() * 7 + 4, r: Math.random() * 6, vr: (Math.random() - .5) * .3, c: COL[(Math.random() * COL.length) | 0], l: 1, star: Math.random() < .25 });
+    }
+    if (!raf) raf = requestAnimationFrame(loop);
+  }
+  function loop() {
+    cx.setTransform(1, 0, 0, 1, 0, 0); cx.clearRect(0, 0, cv.width, cv.height); cx.scale(dpr, dpr);
+    parts = parts.filter(function (p) { return p.l > 0 && p.y < innerHeight + 30; });
+    parts.forEach(function (p) {
+      p.vy += .22; p.vx *= .99; p.x += p.vx; p.y += p.vy; p.r += p.vr; p.l -= .006;
+      cx.save(); cx.globalAlpha = Math.max(0, Math.min(1, p.l * 1.6)); cx.translate(p.x, p.y); cx.rotate(p.r); cx.fillStyle = p.c;
+      if (p.star) { cx.beginPath(); for (var k = 0; k < 8; k++) { var rr = k % 2 ? p.s * .35 : p.s; var ang = k * Math.PI / 4; cx.lineTo(Math.cos(ang) * rr, Math.sin(ang) * rr); } cx.closePath(); cx.fill(); }
+      else cx.fillRect(-p.s / 2, -p.s / 4, p.s, p.s / 2);
+      cx.restore();
+    });
+    raf = parts.length ? requestAnimationFrame(loop) : 0;
+    if (!raf) cx.clearRect(0, 0, innerWidth, innerHeight);
+  }
+  function confettiTop() { burst(innerWidth * .3, innerHeight * .35, 60, 10); burst(innerWidth * .7, innerHeight * .35, 60, 10); }
+
+  /* ---------- навігація ---------- */
+  var VIEWS = ['home', 'g1', 'g2', 'g3', 'final', 'admin'], cur = null, finTimer = 0;
+  function allDone() { return S.g1.done && S.g2.done && S.g3.done; }
+  function show(name) {
+    if (name === 'final' && !allDone()) { name = 'home'; toast('Фінал відкриється після проходження всіх трьох ігор'); }
+    cur = name; clearInterval(finTimer);
+    VIEWS.forEach(function (v) { $('#v-' + v).hidden = v !== name; });
+    $('#homeBtn').hidden = name === 'home';
+    closeModals();
+    window.scrollTo(0, 0);
+    ({ home: renderHome, g1: enterG1, g2: enterG2, g3: enterG3, final: enterFinal, admin: renderAdmin })[name]();
+    updateNote();
+    renderDots();
+    var hd = $('#v-' + name + ' h1, #v-' + name + ' h2'); if (hd) { hd.setAttribute('tabindex', '-1'); }
+  }
+  function go(n) {
+    if (n !== cur) show(n);
+    try { if (location.hash !== '#' + n) location.hash = n; } catch (e) {}
+  }
+  function route() { var n = (location.hash || '').replace('#', ''); if (VIEWS.indexOf(n) < 0) n = 'home'; if (n !== cur) show(n); }
+  addEventListener('hashchange', route);
+  document.addEventListener('click', function (e) {
+    var t = e.target.closest('[data-go]'); if (t) { e.preventDefault(); go(t.dataset.go); }
+  });
+  $('#logo').addEventListener('click', function () { go('home'); });
+  $('#homeBtn').addEventListener('click', function () { go('home'); });
+  $('#finalBtn').addEventListener('click', function () { go('final'); });
+
+  function renderDots() {
+    var n = [S.g1.done, S.g2.done, S.g3.done], c = 0;
+    $$('#dots b').forEach(function (b, i) { b.classList.toggle('on', n[i]); if (n[i]) c++; });
+    $('#dots-t').textContent = c + ' / 3';
+    $('#dots').setAttribute('aria-label', 'Пройдено ігор: ' + c + ' з 3');
+  }
+  function renderHome() {
+    ['g1', 'g2', 'g3'].forEach(function (g) { $('#card-' + g).classList.toggle('done', !!S[g].done); });
+    var ok = allDone(); $('#finalBtn').disabled = !ok; $('#finalcta').classList.toggle('open', ok);
+    $('#finalcta-t').textContent = ok ? 'Усі три ігри пройдено! Час подивитися фінал.' : 'Пройди всі три ігри — і відкриється фінальний екран.';
+  }
+  function nextStep(btn) { btn.hidden = !allDone(); }
+
+  function closeModals() { $('#m-card').hidden = true; $('#m-img').hidden = true; $('#m-txt').hidden = true; }
+  addEventListener('keydown', function (e) { if (e.key === 'Escape') { if (!$('#m-img').hidden) $('#m-img').hidden = true; else closeModals(); } });
+
+  /* ---------- ГРА 1 ---------- */
+  var Q1 = [
+    'Як тебе звати та в якому підрозділі ти працюєш?',
+    'Що тобі найбільше подобається у твоїй роботі?',
+    'Який твій прихований талант?',
+    'Який факт про тебе здивував би колег?',
+    'Яку суперсилу ти хотів би мати на роботі?',
+    'Що допомагає тобі не втрачати гарний настрій?',
+    'Яка твоя найбільша професійна мрія?',
+    'Якби ти міг змінити одну річ у робочому процесі, що б це було?',
+    'Який цікавий факт про тебе майже ніхто не знає?',
+    'Опиши себе трьома словами.'
+  ];
+  var g1 = { order: [], pos: 0, active: false };
+  function newG1() { g1.order = shuffle(Q1.map(function (_, i) { return i; })); g1.pos = 0; g1.active = true; }
+  function enterG1() { if (!g1.active) newG1(); $('#g1-res').hidden = true; $('#g1-q').hidden = false; $('#g1-rand-w').hidden = false; renderG1(); }
+  function renderG1() {
+    var id = g1.order[g1.pos], last = g1.pos === g1.order.length - 1;
+    $('#g1-count').textContent = 'Запитання ' + (g1.pos + 1) + ' з ' + Q1.length;
+    $('#g1-qt').textContent = Q1[id];
+    var ta = $('#g1-text'); ta.value = S.g1.answers[id] || '';
+    $('#g1-saved').hidden = !S.g1.answers[id];
+    $('#g1-bar').style.width = (g1.pos / Q1.length * 100) + '%';
+    $('#g1-next').innerHTML = (last ? 'Завершити' : 'Наступне запитання') + icon(last ? 'check' : 'arrow-right', 18);
+    $('#g1-rand').disabled = last;
+    var s = $('#g1-q'); s.classList.remove('enter'); void s.offsetWidth; s.classList.add('enter');
+  }
+  function g1Commit() {
+    var id = g1.order[g1.pos], t = $('#g1-text').value.trim();
+    if (t) S.g1.answers[id] = t; save(); scheduleSync(); return !!t;
+  }
+  $('#g1-save').addEventListener('click', function () {
+    if (!g1Commit()) { toast('Спочатку напиши відповідь'); $('#g1-text').focus(); return; }
+    $('#g1-saved').hidden = false; toast('Відповідь збережено');
+  });
+  $('#g1-text').addEventListener('input', function () { $('#g1-saved').hidden = true; });
+  function g1Advance() { g1.pos++; if (g1.pos >= g1.order.length) finishG1(); else renderG1(); }
+  $('#g1-next').addEventListener('click', function () { g1Commit(); g1Advance(); });
+  $('#g1-skip').addEventListener('click', function () { g1Advance(); });
+  $('#g1-rand').addEventListener('click', function () {
+    var left = g1.order.length - 1 - g1.pos; if (left < 1) { toast('Це останнє запитання'); return; }
+    g1Commit();
+    var k = g1.pos + 1 + Math.floor(Math.random() * left), t = g1.order[g1.pos]; g1.order[g1.pos] = g1.order[k]; g1.order[k] = t;
+    renderG1();
+  });
+  function finishG1() {
+    g1.active = false; S.g1.done = true; save(); renderDots(); scheduleSync();
+    var ids = Object.keys(S.g1.answers), box = $('#g1-ans'); box.textContent = '';
+    ids.sort(function (a, b) { return a - b; }).forEach(function (i) { var d = h('div', 'ans'); d.appendChild(h('b', '', Q1[i])); d.appendChild(h('span', '', S.g1.answers[i])); box.appendChild(d); });
+    $('#g1-res-t').textContent = ids.length ? 'Збережено ' + ids.length + ' ' + plural(ids.length, 'відповідь', 'відповіді', 'відповідей') + ' з ' + Q1.length + '. Дякуємо, що ділишся собою з командою.' : 'Цього разу ти пропустив(ла) усі запитання. Спробуй ще раз, коли буде настрій.';
+    $('#g1-bar').style.width = '100%';
+    $('#g1-q').hidden = true; $('#g1-rand-w').hidden = true; $('#g1-res').hidden = false;
+    var r = $('#g1-res'); r.classList.remove('enter'); void r.offsetWidth; r.classList.add('enter');
+    window.scrollTo(0, 0); confettiTop();
+  }
+  $('#g1-again').addEventListener('click', function () { newG1(); enterG1(); window.scrollTo(0, 0); });
+
+  /* ---------- ГРА 2 ---------- */
+  var FACT = 'Загальновідомий факт', EX = 'Навчальний умовний приклад';
+  var Q2 = [
+    { q: 'Чому важлива взаємодія між різними структурними підрозділами?', tag: EX,
+      o: ['Щоб рішення були узгодженими, а завдання не дублювалися', 'Щоб кожен підрозділ працював повністю окремо від інших', 'Щоб обмін інформацією відбувався якомога рідше', 'Щоб документи проходили без погодження'],
+      why: 'Узгоджені дії економлять час і ресурси, а рішення враховують усі аспекти питання.' },
+    { q: 'Як робота одного підрозділу може впливати на результат іншого?', tag: EX,
+      o: ['Якість і своєчасність підготовлених матеріалів визначають, наскільки швидко інший підрозділ завершить свій етап', 'Ніяк, бо підрозділи між собою не пов’язані', 'Лише через зміну назви підрозділу', 'Впливає тільки на графік відпусток'],
+      why: 'Більшість завдань мають ланцюжок виконавців: затримка чи помилка на одному етапі позначається на наступному.' },
+    { q: 'Що є важливим результатом роботи Міністерства?', tag: EX,
+      o: ['Ухвалені та впроваджені рішення, які покращують умови для людей і бізнесу', 'Кількість підготовлених, але нереалізованих документів', 'Кількість проведених нарад за рік', 'Кількість внутрішніх листів'],
+      why: 'Мірило роботи — реальні зміни, а не обсяг паперів чи кількість зустрічей.' },
+    { q: 'Чому державна служба потребує командної роботи?', tag: EX,
+      o: ['Бо більшість державних завдань складні й потребують досвіду різних фахівців', 'Бо одна людина не може відповідати за власну роботу', 'Бо командна робота скасовує відповідальність кожного', 'Бо так швидше закінчується робочий день'],
+      why: 'Складні питання охоплюють кілька напрямів, тож найкращий результат дає поєднання різних знань.' },
+    { q: 'Яку роль відіграє комунікація під час реалізації державних програм?', tag: EX,
+      o: ['Забезпечує зрозумілість цілей, узгодженість дій виконавців і довіру цільової аудиторії', 'Жодної, достатньо лише затвердити документ', 'Потрібна лише після завершення програми', 'Потрібна тільки для внутрішніх звітів'],
+      why: 'Без зрозумілої комунікації люди не дізнаються про можливості, а виконавці діють розрізнено.' },
+    { q: 'Який статус надав Україні Європейський Союз у червні 2022 року?', tag: FACT,
+      o: ['Країни-кандидата на членство в ЄС', 'Спостерігача при Раді ЄС', 'Асоційованого члена Єврозони', 'Країни з правом вето в ЄС'],
+      why: 'У червні 2022 року Європейська рада надала Україні статус кандидата на членство в ЄС.' },
+    { q: 'Що, зокрема, передбачає Угода про асоціацію між Україною та ЄС?', tag: FACT,
+      o: ['Поглиблену зону вільної торгівлі та поступове наближення законодавства до норм ЄС', 'Автоматичне членство в Європейському Союзі', 'Єдину валюту для обох сторін', 'Скасування державних кордонів'],
+      why: 'Угода охоплює політичну асоціацію та економічну інтеграцію, зокрема зону вільної торгівлі.' },
+    { q: 'Що означає принцип сталого розвитку?', tag: FACT,
+      o: ['Задоволення потреб сьогодення без шкоди для можливостей майбутніх поколінь', 'Максимальне використання ресурсів уже зараз', 'Повну заборону будь-якої економічної діяльності', 'Розвиток лише найбільших міст'],
+      why: 'Це загальноприйняте визначення: баланс між економікою, суспільством і довкіллям.' },
+    { q: 'Про що йдеться в Паризькій угоді 2015 року?', tag: FACT,
+      o: ['Про протидію зміні клімату та обмеження зростання глобальної температури', 'Про правила торгівлі сільськогосподарською продукцією', 'Про безпеку повітряних перевезень', 'Про міжнародні поштові відправлення'],
+      why: 'Паризька угода — міжнародний договір про дії щодо зміни клімату. Україна його ратифікувала.' },
+    { q: 'Що належить до інструментів економічної політики держави?', tag: FACT,
+      o: ['Регуляторні, фінансові та програмні заходи для створення умов економічного зростання', 'Лише випуск сувенірної продукції', 'Тільки рішення приватних компаній', 'Виключно метеорологічні прогнози'],
+      why: 'Держава впливає на економіку через регулювання, бюджетні та фінансові механізми, державні програми.' },
+    { q: 'Що найбільше допомагає розвитку малого й середнього бізнесу?', tag: EX,
+      o: ['Зрозумілі правила, спрощення процедур і доступ до фінансування', 'Часті зміни правил без попередження', 'Збільшення кількості дозвільних документів', 'Відсутність відкритої інформації'],
+      why: 'Передбачуваність і простота правил дозволяють підприємцям планувати та інвестувати.' },
+    { q: 'Для чого держава підтримує вітчизняного виробника?', tag: EX,
+      o: ['Щоб зміцнювати економіку, створювати робочі місця та підвищувати конкурентоспроможність', 'Щоб усі підприємства мали однакові прибутки', 'Щоб зменшити кількість товарів на ринку', 'Щоб підприємства не розвивалися'],
+      why: 'Сильний виробник — це робочі місця, податки та стійкість економіки.' },
+    { q: 'Чому екологічна політика важлива для економіки?', tag: EX,
+      o: ['Бо стан довкілля впливає на здоров’я людей, ресурси та сталий розвиток галузей', 'Бо економіка не залежить від природних ресурсів', 'Бо стосується лише заповідних територій', 'Бо не має жодного зв’язку з виробництвом'],
+      why: 'Економіка використовує природні ресурси, а чисте довкілля — умова здорового й продуктивного суспільства.' },
+    { q: 'Яка ознака добре сформульованої цілі державної програми?', tag: EX,
+      o: ['Вимірюваність: зрозуміло, за якими показниками оцінюють результат', 'Максимально розмите формулювання', 'Відсутність строків виконання', 'Складна термінологія без пояснень'],
+      why: 'Чітка мета з показниками й термінами дозволяє перевірити, чи програма спрацювала.' },
+    { q: 'Який із принципів державної служби закріплено законодавством України?', tag: FACT,
+      o: ['Політична неупередженість', 'Партійна лояльність', 'Особисті вподобання керівника', 'Закритість заради зручності'],
+      why: 'Закон «Про державну службу» серед принципів називає, зокрема, законність, професіоналізм, доброчесність, прозорість і політичну неупередженість.' },
+    { q: 'Що слід зробити, коли для завдання потрібні дані від іншого підрозділу?', tag: EX,
+      o: ['Чітко сформулювати запит із метою та строком і подякувати за відповідь', 'Чекати, що хтось сам здогадається надіслати', 'Зробити припущення й нікого не питати', 'Відкласти завдання без пояснення'],
+      why: 'Зрозумілий запит і вдячність економлять час усім і будують культуру взаємної підтримки.' }
+  ];
+  var g2 = { order: [], pos: 0, score: 0, right: 0, streak: 0, locked: false, active: false, opts: [] };
+  function newG2() { g2.order = shuffle(Q2.map(function (_, i) { return i; })); g2.pos = 0; g2.score = 0; g2.right = 0; g2.streak = 0; g2.locked = false; g2.active = true; }
+  function enterG2() { if (!g2.active) newG2(); $('#g2-res').hidden = true; $('#g2-q').hidden = false; renderG2(); }
+  function renderG2() {
+    var q = Q2[g2.order[g2.pos]]; g2.locked = false;
+    $('#g2-count').textContent = 'Запитання ' + (g2.pos + 1) + ' з ' + Q2.length;
+    $('#g2-pts').textContent = g2.score;
+    var st = $('#g2-streak'); st.hidden = g2.streak < 2; st.innerHTML = icon('flame', 14) + 'Серія ' + g2.streak;
+    $('#g2-qt').textContent = q.q;
+    $('#g2-bar').style.width = (g2.pos / Q2.length * 100) + '%';
+    $('#g2-fb').hidden = true;
+    g2.opts = shuffle(q.o.map(function (t, i) { return { t: t, ok: i === 0 }; }));
+    var box = $('#g2-opts'); box.textContent = '';
+    g2.opts.forEach(function (o, i) {
+      var b = h('button', 'opt'); b.type = 'button';
+      b.appendChild(h('span', 'l', 'АБВГ'.charAt(i))); b.appendChild(h('span', 't', o.t));
+      b.addEventListener('click', function () { pick(i, b); });
+      box.appendChild(b);
+    });
+    var s = $('#g2-q'); s.classList.remove('enter'); void s.offsetWidth; s.classList.add('enter');
+  }
+  function pick(i, btn) {
+    if (g2.locked) return; g2.locked = true;
+    var q = Q2[g2.order[g2.pos]], ok = g2.opts[i].ok, bs = $$('#g2-opts .opt');
+    bs.forEach(function (b, k) { b.disabled = true; if (g2.opts[k].ok) b.classList.add('ok'); else if (k === i) b.classList.add('no'); else b.classList.add('dim'); });
+    var fb = $('#g2-fb'); fb.className = 'fb ' + (ok ? 'ok' : 'no');
+    var gain = 0;
+    if (ok) { g2.right++; g2.streak++; gain = 10 + (g2.streak >= 3 ? 5 : 0); g2.score += gain; var r = btn.getBoundingClientRect(); burst(r.left + 40, r.top + 20, 28, 7); }
+    else g2.streak = 0;
+    $('#g2-fb-h').textContent = ok ? 'Правильно! +' + gain + ' балів' + (gain > 10 ? ' (бонус за серію)' : '') : 'Не зовсім. Правильна відповідь виділена зеленим';
+    $('#g2-fb-t').textContent = q.why;
+    $('#g2-tag').textContent = q.tag;
+    $('#g2-pts').textContent = g2.score;
+    var st = $('#g2-streak'); st.hidden = g2.streak < 2; st.innerHTML = icon('flame', 14) + 'Серія ' + g2.streak;
+    $('#g2-next').innerHTML = (g2.pos === Q2.length - 1 ? 'Показати результат' : 'Далі') + icon('arrow-right', 18);
+    fb.hidden = false;
+    setTimeout(function () { try { fb.scrollIntoView({ block: 'nearest', behavior: reduce ? 'auto' : 'smooth' }); } catch (e) {} }, 60);
+  }
+  $('#g2-next').addEventListener('click', function () { g2.pos++; if (g2.pos >= Q2.length) finishG2(); else renderG2(); });
+  function finishG2() {
+    g2.active = false; S.g2.done = true; S.g2.best = Math.max(S.g2.best || 0, g2.score); S.g2.last = { right: g2.right, score: g2.score }; save(); renderDots(); scheduleSync();
+    var n = g2.right, lv;
+    if (n >= 12) lv = ['Ти знаєш Міністерство!', 'Відмінний результат! Ти добре бачиш, як напрями й підрозділи працюють разом.'];
+    else if (n >= 7) lv = ['Ти відкрив для себе нове!', 'Гарний результат. Ще кілька відкриттів — і ти станеш справжнім знавцем.'];
+    else lv = ['Час дізнатися більше!', 'Не біда, саме для цього ми й граємо. Спробуй ще раз і розпитай колег про їхні напрями.'];
+    $('#g2-res-h').textContent = lv[0];
+    $('#g2-res-n').textContent = n;
+    $('#g2-res-pts').textContent = 'Ти здобув(ла) ' + g2.score + ' балів. Найкращий результат на цьому пристрої: ' + S.g2.best + '.';
+    $('#g2-res-t').textContent = lv[1] + ' Підсумок: державні рішення народжуються в команді, тож поділися результатом із колегою з іншого підрозділу.';
+    $('#g2-bar').style.width = '100%';
+    $('#g2-q').hidden = true; $('#g2-res').hidden = false;
+    var r = $('#g2-res'); r.classList.remove('enter'); void r.offsetWidth; r.classList.add('enter');
+    var bar = $('#g2-res-bar'); bar.style.width = '0'; setTimeout(function () { bar.style.width = (n / Q2.length * 100) + '%'; }, 80);
+    window.scrollTo(0, 0); if (n >= 7) confettiTop();
+  }
+  $('#g2-again').addEventListener('click', function () { newG2(); enterG2(); window.scrollTo(0, 0); });
+
+  /* ---------- ГРА 3 ---------- */
+  var CATS = [
+    { id: 'support', label: 'Дякую за підтримку', icon: 'heart' },
+    { id: 'prof', label: 'Дякую за професіоналізм', icon: 'award' },
+    { id: 'team', label: 'Дякую за командність', icon: 'users' },
+    { id: 'help', label: 'Дякую за допомогу', icon: 'lifebuoy' },
+    { id: 'joy', label: 'Дякую за позитив', icon: 'sun' },
+    { id: 'near', label: 'Дякую, що завжди поруч', icon: 'link' }
+  ];
+  var EXS = [
+    'Дякую, що завжди знаходиш час допомогти.',
+    'Дякую за твою підтримку та професіоналізм.',
+    'З тобою навіть складні завдання стають простішими.',
+    'Дякую за позитив, який ти приносиш у команду.',
+    'Ціную нашу співпрацю та взаєморозуміння.'
+  ];
+  var DSN = { d1: 'Світанок', d2: 'Сонце', d3: 'Небо', d4: 'Ніч' };
+  var PAL = { d1: ['#2f8cff', '#0b1d44', '#ffffff', '#ffd23f'], d2: ['#ffd23f', '#ffb100', '#0b1d44', '#0b1d44'], d3: ['#d4eeff', '#6cc4ff', '#0b1d44', '#0b1d44'], d4: ['#12306a', '#06112a', '#ffffff', '#6cc4ff'] };
+  var f = { cat: 'support', design: 'd1' };
+
+  function postcard(c) {
+    var cat = CATS.filter(function (x) { return x.id === c.cat; })[0] || CATS[0];
+    var el = h('article', 'pc ' + c.design);
+    var tag = h('span', 'pc-cat'); tag.innerHTML = icon(cat.icon, 14); tag.appendChild(document.createTextNode(cat.label)); el.appendChild(tag);
+    var to = h('p', 'pc-to'); to.textContent = 'Для: ' + (c.to || '…'); el.appendChild(to);
+    el.appendChild(h('p', 'pc-msg', c.msg || 'Ваші теплі слова з’являться тут…'));
+    var ft = h('div', 'pc-foot'); ft.appendChild(h('span', '', 'TEAM QUEST')); var hs = h('span'); hs.innerHTML = icon('heart', 18); hs.firstChild.setAttribute('fill', 'currentColor'); ft.appendChild(hs); el.appendChild(ft);
+    return el;
+  }
+  function buildForm() {
+    var cats = $('#cats'); cats.textContent = '';
+    CATS.forEach(function (c) {
+      var b = h('button', 'cat'); b.type = 'button'; b.dataset.id = c.id; b.innerHTML = icon(c.icon, 20); b.appendChild(document.createTextNode(c.label));
+      b.setAttribute('aria-pressed', String(c.id === f.cat));
+      b.addEventListener('click', function () { f.cat = c.id; $$('.cat', cats).forEach(function (x) { x.setAttribute('aria-pressed', String(x.dataset.id === f.cat)); }); pv(); });
+      cats.appendChild(b);
+    });
+    var ex = $('#exs'); ex.textContent = '';
+    EXS.forEach(function (t) { var b = h('button', 'ex', t); b.type = 'button'; b.addEventListener('click', function () { $('#w-msg').value = t; pv(); $('#w-msg').focus(); }); ex.appendChild(b); });
+    var ds = $('#dsg'); ds.textContent = '';
+    Object.keys(DSN).forEach(function (k) {
+      var b = h('button', 'dsw ' + k); b.type = 'button'; b.dataset.id = k; b.title = DSN[k]; b.setAttribute('aria-label', 'Дизайн «' + DSN[k] + '»'); b.setAttribute('aria-pressed', String(k === f.design));
+      b.addEventListener('click', function () { f.design = k; $$('.dsw', ds).forEach(function (x) { x.setAttribute('aria-pressed', String(x.dataset.id === f.design)); }); pv(); });
+      ds.appendChild(b);
+    });
+  }
+  function pv() {
+    var box = $('#g3-pv'); box.textContent = '';
+    box.appendChild(postcard({ cat: f.cat, to: $('#w-name').value.trim(), msg: $('#w-msg').value.trim(), design: f.design }));
+  }
+  $('#w-name').addEventListener('input', pv); $('#w-msg').addEventListener('input', pv);
+  $('#g3-form').addEventListener('submit', function (e) {
+    e.preventDefault();
+    var to = $('#w-name').value.trim(), msg = $('#w-msg').value.trim(), er = $('#g3-err');
+    if (!to) { er.textContent = 'Напишіть ім’я або псевдонім колеги.'; $('#w-name').focus(); return; }
+    if (!msg) { er.textContent = 'Напишіть кілька слів подяки або виберіть приклад.'; $('#w-msg').focus(); return; }
+    er.textContent = '';
+    var c = { id: 'c' + Date.now(), cat: f.cat, to: to, msg: msg, design: f.design, ts: Date.now() };
+    S.g3.cards.unshift(c); S.g3.done = true; save(); renderDots(); scheduleSync();
+    $('#w-name').value = ''; $('#w-msg').value = ''; pv(); renderWall();
+    openCard(c);
+  });
+  function renderWall() {
+    var w = $('#wall'); w.textContent = '';
+    wallList().forEach(function (c, i) {
+      var it = h('div', 'wi'); it.style.animationDelay = Math.min(i, 8) * 60 + 'ms';
+      it.appendChild(postcard(c));
+      var ft = h('div', 'wi-f'); ft.appendChild(h('span', '', c.demo ? 'Приклад' : fmt(c.ts)));
+      var b = h('button', 'mini'); b.type = 'button'; b.innerHTML = icon('image', 14) + 'Зберегти зображення'; b.addEventListener('click', function () { saveImg(c); });
+      ft.appendChild(b);
+      if (ADMIN && shareOn() && !c.demo) { var dl = h('button', 'mini del'); dl.type = 'button'; dl.innerHTML = icon('trash', 14) + 'Видалити'; dl.addEventListener('click', function () { delCard(c, dl); }); ft.appendChild(dl); }
+      it.appendChild(ft); w.appendChild(it);
+    });
+    var n = wallList().length; $('#wall-n').textContent = n + ' ' + plural(n, 'подяка', 'подяки', 'подяк');
+  }
+  function fmt(ts) { try { return new Date(ts).toLocaleString('uk-UA', { day: 'numeric', month: 'long', hour: '2-digit', minute: '2-digit' }); } catch (e) { return ''; } }
+  function enterG3() { if (!$('#cats').firstChild) buildForm(); pv(); renderWall(); }
+
+  var curCard = null;
+  function openCard(c) {
+    curCard = c; var m = $('#m-card'), box = $('#m-card-pc'); box.textContent = ''; box.appendChild(postcard(c));
+    $$('.fl-h', $('#m-card-box')).forEach(function (x) { x.remove(); });
+    if (!reduce) for (var i = 0; i < 12; i++) { var s = h('span', 'fl-h'); s.innerHTML = icon('heart', 16 + (i % 4) * 6); s.firstChild.setAttribute('fill', 'currentColor'); s.style.left = (Math.random() * 100) + '%'; s.style.animationDelay = (Math.random() * 1.8) + 's'; $('#m-card-box').appendChild(s); }
+    $('#m-final').hidden = !allDone();
+    m.hidden = false; m.scrollTop = 0; $('#m-close').focus();
+    setTimeout(function () { burst(innerWidth / 2, innerHeight * .4, 70, 11); }, 350);
+  }
+  $('#m-close').addEventListener('click', function () { $('#m-card').hidden = true; var w = $('.wall-h'); if (w) w.scrollIntoView({ behavior: reduce ? 'auto' : 'smooth' }); });
+  $('#m-final').addEventListener('click', function () { go('final'); });
+  $('#m-save').addEventListener('click', function () { saveImg(curCard); });
+  $('#m-img-x').addEventListener('click', function () { $('#m-img').hidden = true; });
+
+  function wrap(ctx, text, maxW) {
+    var words = text.split(/\s+/), lines = [], line = '';
+    words.forEach(function (w) {
+      var t = line ? line + ' ' + w : w;
+      if (ctx.measureText(t).width > maxW && line) { lines.push(line); line = w; } else line = t;
+    });
+    if (line) lines.push(line); return lines;
+  }
+  function drawImg(c) {
+    var W = 1080, H = 1350, cv2 = document.createElement('canvas'); cv2.width = W; cv2.height = H;
+    var x = cv2.getContext('2d'), p = PAL[c.design] || PAL.d1, cat = CATS.filter(function (k) { return k.id === c.cat; })[0] || CATS[0];
+    var g = x.createLinearGradient(0, 0, W, H); g.addColorStop(0, p[0]); g.addColorStop(1, p[1]); x.fillStyle = g; x.fillRect(0, 0, W, H);
+    x.globalAlpha = .18; x.fillStyle = p[3]; x.beginPath(); x.arc(W - 40, 40, 300, 0, 7); x.fill();
+    x.globalAlpha = .1; x.fillStyle = p[2]; x.beginPath(); x.arc(40, H - 20, 260, 0, 7); x.fill(); x.globalAlpha = 1;
+    var PAD = 96, fam = '"Manrope", system-ui, sans-serif', fd = '"Unbounded", "Manrope", system-ui, sans-serif';
+    x.fillStyle = p[2]; x.textBaseline = 'alphabetic';
+    // категорія
+    x.font = '800 34px ' + fam; var cl = cat.label.toUpperCase(), cw = x.measureText(cl).width + 56;
+    x.globalAlpha = .2; x.fillStyle = p[2]; roundRect(x, PAD, 96, cw, 70, 35); x.fill(); x.globalAlpha = 1;
+    x.fillStyle = p[2]; x.fillText(cl, PAD + 28, 142);
+    // кому
+    x.font = '700 50px ' + fd; var tl = wrap(x, 'Для: ' + c.to, W - PAD * 2), y = 290;
+    tl.slice(0, 2).forEach(function (l) { x.fillText(l, PAD, y); y += 70; });
+    // текст
+    y += 40; var size = 62; x.font = '700 ' + size + 'px ' + fam; var ml = wrap(x, c.msg, W - PAD * 2);
+    while (ml.length * size * 1.35 > 560 && size > 38) { size -= 4; x.font = '700 ' + size + 'px ' + fam; ml = wrap(x, c.msg, W - PAD * 2); }
+    ml.forEach(function (l) { x.fillText(l, PAD, y); y += size * 1.35; });
+    // підвал
+    x.font = '800 38px ' + fd; x.fillText('TEAM QUEST', PAD, H - 110);
+    x.font = '600 28px ' + fam; x.globalAlpha = .85; x.fillText('Різні люди. Спільна справа. Одна команда.', PAD, H - 62); x.globalAlpha = 1;
+    x.fillStyle = p[3]; heart(x, W - PAD - 40, H - 128, 46);
+    return cv2.toDataURL('image/png');
+  }
+  function roundRect(x, a, b, w, hh, r) { x.beginPath(); x.moveTo(a + r, b); x.arcTo(a + w, b, a + w, b + hh, r); x.arcTo(a + w, b + hh, a, b + hh, r); x.arcTo(a, b + hh, a, b, r); x.arcTo(a, b, a + w, b, r); x.closePath(); }
+  function heart(x, cx0, cy0, s) { x.beginPath(); x.moveTo(cx0, cy0 + s * .9); x.bezierCurveTo(cx0 - s * 1.6, cy0 - s * .2, cx0 - s * .7, cy0 - s * 1.2, cx0, cy0 - s * .35); x.bezierCurveTo(cx0 + s * .7, cy0 - s * 1.2, cx0 + s * 1.6, cy0 - s * .2, cx0, cy0 + s * .9); x.fill(); }
+  var lastURL = '';
+  function saveImg(c) {
+    if (!c) return;
+    var go2 = function () {
+      try { lastURL = drawImg(c); } catch (e) { toast('Не вдалося створити зображення'); return; }
+      $('#m-img-i').src = lastURL; $('#m-img').hidden = false; $('#m-img').scrollTop = 0; $('#m-img-x').focus();
+    };
+    try {
+      if (document.fonts && document.fonts.load) {
+        var done = false, once = function () { if (!done) { done = true; go2(); } };
+        Promise.all([document.fonts.load('700 40px Manrope'), document.fonts.load('800 40px Unbounded')]).then(once, once);
+        setTimeout(once, 1200);
+      } else go2();
+    } catch (e) { go2(); }
+  }
+  $('#m-img-dl').addEventListener('click', function () {
+    try { var a = document.createElement('a'); a.href = lastURL; a.download = 'team-quest-podyaka.png'; document.body.appendChild(a); a.click(); a.remove(); toast('Якщо завантаження не почалося, збережіть зображення вручну'); } catch (e) { toast('Збережіть зображення вручну'); }
+  });
+
+  /* ---------- ФІНАЛ ---------- */
+  function enterFinal() {
+    var b = $('#fin-b'); b.textContent = ''; var k = 0;
+    ['TEAM', 'QUEST'].forEach(function (w) { var wd = h('span', 'w'); w.split('').forEach(function (ch) { var s = h('span', 'c', ch); s.style.animationDelay = (k++ * 70 + 200) + 'ms'; wd.appendChild(s); }); b.appendChild(wd); });
+    S.seenFinal = true; save();
+    var n = 0;
+    function show2() { burst(innerWidth * (.15 + Math.random() * .7), innerHeight * (.2 + Math.random() * .3), 55, 10); }
+    setTimeout(show2, 400); setTimeout(show2, 900);
+    finTimer = setInterval(function () { show2(); if (++n > 5) clearInterval(finTimer); }, 1200);
+  }
+  $('#fin-boom').addEventListener('click', function () { burst(innerWidth * .25, innerHeight * .4, 70, 11); burst(innerWidth * .75, innerHeight * .4, 70, 11); burst(innerWidth * .5, innerHeight * .3, 80, 12); });
+  $('#restart').addEventListener('click', function () {
+    S.g1 = { answers: {}, done: false }; S.g2 = { best: S.g2.best, done: false }; S.g3.done = false; S.seenFinal = false; g1.active = false; g2.active = false; save();
+    scheduleSync(); toast('Починаємо спочатку'); go('home');
+  });
+
+  /* ---------- спільне сховище та адміністратор ---------- */
+  var DB = null, UID = null, ADMIN = false, DL = null, shareOff = false;
+  var sharedCards = [], ans = {}, wallDocs = {}, syncT = 0, syncing = false, again = false;
+  function shareOn() { return !!(DB && UID && !shareOff); }
+  function updateNote() {
+    var t = shareOn() ? 'Відповіді в грі «Познайомимося?» бачить адміністратор гри. Подяки з’являються на спільній стіні.' : 'Відповіді та подяки зберігаються лише на цьому пристрої. Щоб передати їх адміністратору, натисніть «Надіслати результати» на головній сторінці.';
+    $$('.share-note').forEach(function (e) { e.textContent = t; });
+    $('#adminBtn').hidden = !ADMIN;
+  }
+  function wallList() {
+    var seen = {}, out = [];
+    sharedCards.concat(S.g3.cards).forEach(function (c) { if (!seen[c.id]) { seen[c.id] = 1; out.push(c); } });
+    out.sort(function (a, b) { return (b.ts || 0) - (a.ts || 0); });
+    return out.concat(DEMO);
+  }
+  function scheduleSync() { if (!shareOn()) return; clearTimeout(syncT); syncT = setTimeout(doSync, 500); }
+  function doSync() {
+    if (!shareOn()) return;
+    if (syncing) { again = true; return; }
+    syncing = true; again = false;
+    var mine = S.g3.cards.filter(function (c) { return !c.demo; }).map(function (c) { return { id: c.id, cat: c.cat, to: c.to, msg: c.msg, design: c.design, ts: c.ts || 0 }; });
+    var l = S.g2.last || {};
+    var a = { answers: S.g1.answers, g1done: !!S.g1.done, g2done: !!S.g2.done, best: S.g2.best || 0, right: l.right || 0, score: l.score || 0, g3done: !!S.g3.done, cards: mine.length, updated: Date.now() };
+    var p;
+    try { p = DB.doc('answers/' + UID).set(a).then(function () { return DB.doc('wall/' + UID).set({ cards: mine }); }); } catch (e) { p = Promise.reject(e); }
+    p.catch(function (e) { if (e && (e.code === 'invalid_argument' || e.code === 'revoked' || e.code === 'not_granted')) { shareOff = true; updateNote(); } })
+      .then(function () { syncing = false; if (again) scheduleSync(); });
+  }
+  function hasLocal() { return Object.keys(S.g1.answers).length || S.g1.done || S.g2.done || S.g3.cards.some(function (c) { return !c.demo; }); }
+  function initShare() {
+    if (!(window.claude && window.claude.use)) return;
+    Promise.all([claude.use('db'), claude.use('user'), claude.use('downloads')]).then(function (r) {
+      DB = r[0]; DL = r[2]; var U = r[1];
+      if (!DB || !U) { DB = null; return; }
+      return Promise.all([U.id(), U.canEdit()]).then(function (v) {
+        UID = v[0]; ADMIN = !!v[1];
+        if (!UID) { DB = null; return; }
+        updateNote();
+        DB.collection('wall').onSnapshot(function (s) {
+          sharedCards = []; wallDocs = {};
+          s.docs.forEach(function (d) { var cs = (d.data() || {}).cards || []; wallDocs[d.id] = cs; cs.forEach(function (c) { sharedCards.push(Object.assign({ uid: d.id }, c)); }); });
+          mergeImp(); if (cur === 'g3') renderWall(); if (cur === 'admin') renderAdmin();
+        }, function () {});
+        if (ADMIN) DB.collection('answers').onSnapshot(function (s) {
+          ans = {}; s.docs.forEach(function (d) { ans[d.id] = d.data() || {}; }); mergeImp();
+          if (cur === 'admin') renderAdmin();
+        }, function () {});
+        if (hasLocal()) scheduleSync();
+        if (ADMIN && location.hash === '#admin' && cur !== 'admin') go('admin');
+      });
+    }).catch(function () {});
+  }
+  function numMap() {
+    var ids = Object.keys(ans), m = {}; Object.keys(wallDocs).forEach(function (k) { if (ids.indexOf(k) < 0) ids.push(k); });
+    ids.sort().forEach(function (k, i) { m[k] = i + 1; }); return m;
+  }
+  function allCards() {
+    var out = []; Object.keys(wallDocs).forEach(function (u) { wallDocs[u].forEach(function (c) { out.push(Object.assign({ uid: u }, c)); }); });
+    out.sort(function (a, b) { return (a.ts || 0) - (b.ts || 0); }); return out;
+  }
+  function renderAdmin() {
+    var ids = Object.keys(ans).sort(), no = numMap(), all = allCards();
+    var st = $('#adm-stats'); st.textContent = '';
+    function cnt(k) { return ids.filter(function (i) { return ans[i][k]; }).length; }
+    [['Учасників', ids.length], ['Гра 1 пройдена', cnt('g1done')], ['Вікторину пройшли', cnt('g2done')], ['Подяк надіслано', all.length]].forEach(function (p) {
+      var d = h('div', 'stat-b'); d.appendChild(h('b', '', p[1])); d.appendChild(h('span', '', p[0])); st.appendChild(d);
+    });
+    var list = $('#adm-list'); list.textContent = '';
+    if (!ids.length) list.appendChild(h('p', 'note', 'Поки що ніхто не передав відповідей. Вони з’являться тут автоматично, коли колеги відкриють гру за посиланням з правом участі.'));
+    ids.forEach(function (id) {
+      var a = ans[id], an = a.answers || {}, d = h('details', 'pp'), s = h('summary');
+      s.appendChild(h('span', '', 'Учасник №' + no[id]));
+      s.appendChild(h('span', 'chip', a.g1done ? 'Гра 1: пройдена' : 'Гра 1: ні'));
+      s.appendChild(h('span', 'chip y', a.g2done ? 'Вікторина: ' + (a.right || 0) + ' з ' + Q2.length : 'Вікторина: ні'));
+      s.appendChild(h('span', 'chip g', 'Подяк: ' + (a.cards || 0)));
+      d.appendChild(s);
+      var b = h('div', 'body'), ks = Object.keys(an).sort(function (x, y) { return x - y; });
+      if (!ks.length) b.appendChild(h('p', 'note', 'Відповідей у грі «Познайомимося?» немає.'));
+      ks.forEach(function (k) { var x = h('div', 'ans'); x.appendChild(h('b', '', Q1[k] || 'Запитання')); x.appendChild(h('span', '', an[k])); b.appendChild(x); });
+      if (a.updated) b.appendChild(h('p', 'note', 'Оновлено: ' + fmt(a.updated) + '. Бали вікторини: ' + (a.score || 0) + ', найкращий результат: ' + (a.best || 0) + '.'));
+      d.appendChild(b); list.appendChild(d);
+    });
+  }
+  function cell(v) { v = v == null ? '' : String(v); if (/^[=+\-@\t\r]/.test(v)) v = '’' + v; return '"' + v.replace(/"/g, '""') + '"'; }
+  function csv(rows) { return '﻿' + rows.map(function (r) { return r.map(cell).join(';'); }).join('\r\n'); }
+  function saveFile(name, data) {
+    var fb = function () { openText('Вміст файлу ' + name, data.replace(/^﻿/, ''), 'Скопіюйте текст, вставте його в порожній файл і збережіть як ' + name + ' (кодування UTF-8).'); };
+    if (!DL) { fb(); return; }
+    DL.save({ filename: name, data: data }).then(function () { toast('Файл збережено'); }, function (e) { if (!e || e.code !== 'declined') fb(); });
+  }
+  function catLabel(id) { var c = CATS.filter(function (k) { return k.id === id; })[0]; return c ? c.label : id; }
+  $('#ex-ans').addEventListener('click', function () {
+    var ids = Object.keys(ans).sort(), no = numMap();
+    var rows = [['№ учасника', 'Оновлено', 'Гра 1 пройдена'].concat(Q1, ['Вікторина пройдена', 'Правильних відповідей', 'Бали (остання спроба)', 'Найкращий результат', 'Гра 3 пройдена', 'Надіслано подяк'])];
+    ids.forEach(function (id) {
+      var a = ans[id], an = a.answers || {};
+      rows.push([no[id], a.updated ? fmt(a.updated) : '', a.g1done ? 'так' : 'ні'].concat(Q1.map(function (_, i) { return an[i] || ''; }), [a.g2done ? 'так' : 'ні', a.right || 0, a.score || 0, a.best || 0, a.g3done ? 'так' : 'ні', a.cards || 0]));
+    });
+    saveFile('team-quest-vidpovidi.csv', csv(rows));
+  });
+  $('#ex-cards').addEventListener('click', function () {
+    var no = numMap(), rows = [['№', 'Учасник №', 'Дата', 'Категорія', 'Кому', 'Повідомлення', 'Дизайн']];
+    allCards().forEach(function (c, i) { rows.push([i + 1, no[c.uid] || '', c.ts ? fmt(c.ts) : '', catLabel(c.cat), c.to, c.msg, DSN[c.design] || c.design]); });
+    saveFile('team-quest-podyaky.csv', csv(rows));
+  });
+  $('#ex-all').addEventListener('click', function () {
+    var no = numMap();
+    var data = {
+      exportedAt: new Date().toISOString(),
+      questions: Q1,
+      participants: Object.keys(ans).sort().map(function (id) { var a = ans[id]; return { n: no[id], updated: a.updated ? new Date(a.updated).toISOString() : null, g1done: !!a.g1done, answers: Object.keys(a.answers || {}).map(function (k) { return { question: Q1[k], answer: a.answers[k] }; }), g2done: !!a.g2done, right: a.right || 0, score: a.score || 0, best: a.best || 0, g3done: !!a.g3done, cards: a.cards || 0 }; }),
+      thanks: allCards().map(function (c) { return { participant: no[c.uid] || null, date: c.ts ? new Date(c.ts).toISOString() : null, category: catLabel(c.cat), to: c.to, message: c.msg, design: DSN[c.design] || c.design }; })
+    };
+    saveFile('team-quest-all.json', JSON.stringify(data, null, 2));
+  });
+  /* ---------- передача результатів без входу ---------- */
+  var imp = (function () { try { return JSON.parse(localStorage.getItem('teamquest.admin.v1') || '{}') || {}; } catch (e) { return {}; } })();
+  function saveImp() { try { localStorage.setItem('teamquest.admin.v1', JSON.stringify(imp)); } catch (e) {} }
+  function mergeImp() { Object.keys(imp).forEach(function (p) { ans['i_' + p] = imp[p]; wallDocs['i_' + p] = imp[p].cl || []; }); }
+  mergeImp();
+  function b64(s) { var by = new TextEncoder().encode(s), bin = ''; for (var i = 0; i < by.length; i++) bin += String.fromCharCode(by[i]); return btoa(bin); }
+  function unb64(t) { var bin = atob(t), by = new Uint8Array(bin.length); for (var i = 0; i < bin.length; i++) by[i] = bin.charCodeAt(i); return new TextDecoder().decode(by); }
+  function pid() { if (!S.pid) { S.pid = 'p' + Math.random().toString(36).slice(2, 10) + Date.now().toString(36); save(); } return S.pid; }
+  function myCode() {
+    var mine = S.g3.cards.filter(function (c) { return !c.demo; }).map(function (c) { return { id: c.id, cat: c.cat, to: c.to, msg: c.msg, design: c.design, ts: c.ts || 0 }; }), l = S.g2.last || {};
+    var row = { p: pid(), answers: S.g1.answers, g1done: !!S.g1.done, g2done: !!S.g2.done, best: S.g2.best || 0, right: l.right || 0, score: l.score || 0, g3done: !!S.g3.done, cl: mine, updated: Date.now() };
+    return 'TQ1:' + b64(JSON.stringify(row)) + '~';
+  }
+  function cleanRow(o) {
+    if (!o || typeof o.p !== 'string' || o.p.length > 40 || !/^[\w-]+$/.test(o.p)) return null;
+    var a = {}; if (o.answers && typeof o.answers === 'object') Object.keys(o.answers).forEach(function (k) { if (/^\d+$/.test(k) && +k < Q1.length && typeof o.answers[k] === 'string') a[k] = o.answers[k].slice(0, 500); });
+    var cl = (Array.isArray(o.cl) ? o.cl : []).slice(0, 100).map(function (c) {
+      c = c || {};
+      return { id: String(c.id || '').slice(0, 40), cat: CATS.some(function (k) { return k.id === c.cat; }) ? c.cat : 'support', to: String(c.to || '').slice(0, 40), msg: String(c.msg || '').slice(0, 220), design: DSN[c.design] ? c.design : 'd1', ts: +c.ts || 0 };
+    });
+    var n = function (v) { v = +v; return isFinite(v) ? v : 0; };
+    return { p: o.p, answers: a, g1done: !!o.g1done, g2done: !!o.g2done, best: n(o.best), right: n(o.right), score: n(o.score), g3done: !!o.g3done, cards: cl.length, cl: cl, updated: n(o.updated) };
+  }
+  function openText(title, text, hint) {
+    $('#m-txt-h').textContent = title; $('#m-txt-p').textContent = hint;
+    var t = $('#m-txt-t'); t.value = text; $('#m-txt').hidden = false; t.focus(); t.select();
+  }
+  function fallbackCopy(t) { try { if (document.execCommand('copy')) { toast('Скопійовано'); return; } } catch (e) {} toast('Текст виділено. Натисніть Ctrl+C або «Копіювати» в меню телефону'); }
+  $('#m-txt-copy').addEventListener('click', function () {
+    var t = $('#m-txt-t'); t.focus(); t.select();
+    try { if (navigator.clipboard && navigator.clipboard.writeText) { navigator.clipboard.writeText(t.value).then(function () { toast('Скопійовано'); }, function () { fallbackCopy(t); }); return; } } catch (e) {}
+    fallbackCopy(t);
+  });
+  $('#m-txt-x').addEventListener('click', function () { $('#m-txt').hidden = true; });
+  document.addEventListener('click', function (e) {
+    if (e.target.closest('[data-send]')) openText('Ваш код результатів', myCode(), 'Скопіюйте код і надішліть його адміністратору гри (месенджер, Teams або пошта). У ньому ваші відповіді з гри «Познайомимося?», результат вікторини та ваші подяки. Якщо щось зміниться, надішліть новий код: старий буде замінено.');
+  });
+  $('#imp-btn').addEventListener('click', function () {
+    var parts = $('#imp-text').value.split('TQ1:').slice(1), add = 0, upd = 0, bad = 0, msg = $('#imp-msg');
+    if (!parts.length) { msg.textContent = 'Не знайдено жодного коду. Код починається з «TQ1:».'; return; }
+    parts.forEach(function (ch) {
+      var m = /^([A-Za-z0-9+\/=\s]+?)(~|$)/.exec(ch); if (!m) { bad++; return; }
+      try { var row = cleanRow(JSON.parse(unb64(m[1].replace(/\s+/g, '')))); if (!row) { bad++; return; } if (imp[row.p]) upd++; else add++; imp[row.p] = row; } catch (e) { bad++; }
+    });
+    saveImp(); mergeImp(); $('#imp-text').value = '';
+    msg.textContent = 'Додано: ' + add + ', оновлено: ' + upd + (bad ? ', не вдалося прочитати: ' + bad : '') + '.';
+    renderAdmin();
+  });
+  $('#imp-clear').addEventListener('click', function () {
+    var b = $('#imp-clear');
+    if (!b.dataset.sure) { b.dataset.sure = '1'; b.textContent = 'Точно очистити?'; setTimeout(function () { delete b.dataset.sure; b.textContent = 'Очистити зведення'; }, 3000); return; }
+    delete b.dataset.sure; b.textContent = 'Очистити зведення';
+    Object.keys(imp).forEach(function (p) { delete ans['i_' + p]; delete wallDocs['i_' + p]; }); imp = {}; saveImp();
+    $('#imp-msg').textContent = 'Зведення очищено.'; renderAdmin();
+  });
+
+  function delCard(c, btn) {
+    if (!btn.dataset.sure) {
+      btn.dataset.sure = '1'; btn.innerHTML = icon('trash', 14) + 'Точно видалити?';
+      setTimeout(function () { if (btn.isConnected) { delete btn.dataset.sure; btn.innerHTML = icon('trash', 14) + 'Видалити'; } }, 3000);
+      return;
+    }
+    var uid = c.uid || UID, ref = DB.doc('wall/' + uid);
+    ref.get().then(function (s) { var cs = ((s.data() || {}).cards || []).filter(function (x) { return x.id !== c.id; }); return ref.set({ cards: cs }); })
+      .then(function () { if (uid === UID) { S.g3.cards = S.g3.cards.filter(function (x) { return x.id !== c.id; }); save(); } toast('Подяку видалено'); })
+      .catch(function () { toast('Не вдалося видалити'); });
+  }
+
+  show((function () { var n = (location.hash || '').replace('#', ''); return VIEWS.indexOf(n) < 0 ? 'home' : n; })());
+  initShare();
+})();
+</script>
+
+</body>
+</html>
